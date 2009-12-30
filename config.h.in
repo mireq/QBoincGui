@@ -1,0 +1,23 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  config.h
+ *
+ *        Version:  1.0
+ *        Created:  30.12.2009 12:58:30
+ *       Revision:  none
+ *       Compiler:  g++
+ *
+ *         Author:  Miroslav Bendík
+ *        Company:  LinuxOS.sk
+ *
+ * =====================================================================================
+ */
+
+#ifndef _CONFIG_H
+#define _CONFIG_H
+
+#cmakedefine COMMUNICATION_DEBUG
+
+#endif    /* ----- #ifndef _CONFIG_H  ----- */
+
