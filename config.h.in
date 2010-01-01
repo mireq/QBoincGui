@@ -17,7 +17,9 @@
 #ifndef _CONFIG_H
 #define _CONFIG_H
 
-#cmakedefine COMMUNICATION_DEBUG
+#cmakedefine DEBUG_BOINC_COMMUNICATION
+#cmakedefine DEBUG_MSG_COLORING
+#cmakedefine DEBUG_MSG_COLORING_256
 
 #endif    /* ----- #ifndef _CONFIG_H  ----- */
 

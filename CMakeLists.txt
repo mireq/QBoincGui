@@ -15,9 +15,11 @@ else(CMAKE_BUILD_TYPE MATCHES Debug)
 	add_definitions(-DQT_NO_DEBUG)
 endif(CMAKE_BUILD_TYPE MATCHES Debug)
 
-option(COMMUNICATION_DEBUG "Build the boincmgr - boinc communication debugging code" OFF)
+option(DEBUG_BOINC_COMMUNICATION "Build the boincmgr - boinc communication debugging code" OFF)
+option(DEBUG_MSG_COLORING "Colored debug messages" OFF)
+option(DEBUG_MSG_COLORING_256 "256 colors in debug messages" OFF)
 
-find_package(Qt4 REQUIRED)
+find_package(Qt4 4.5.0 COMPONENTS QtCore QtGui QtNetwork QtXml REQUIRED)
 include(${QT_USE_FILE})
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)

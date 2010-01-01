@@ -1,6 +1,13 @@
 set(InfoBoinc_SRCS
-	dummy.cpp
+	debug.cpp
+	Socket.cpp
 )
 
-add_library(InfoBoinc ${InfoBoinc_SRCS})
+set(InfoBoinc_MOC_HDRS
+	Socket.h
+)
+
+qt4_wrap_cpp(InfoBoinc_MOC_SRCS ${InfoBoinc_MOC_HDRS})
+
+add_library(InfoBoinc ${InfoBoinc_MOC_SRCS} ${InfoBoinc_SRCS})
 
