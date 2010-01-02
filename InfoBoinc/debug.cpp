@@ -167,19 +167,18 @@ void printFatalMsg(const char *msg)
 }
 
 
-MsgInfo debugMsgInfo(QObject *module, const QString &msgType)
-{
-	return MsgInfo(module, msgType);
-}
-
-
 MsgInfo debugMsgInfo(const QString &module, const QString &msgType)
 {
 	return MsgInfo(module, msgType);
 }
 
 
-#ifndef QT_NO_DEBUG_STREAM
+MsgInfo debugMsgInfo(QObject *module, const QString &msgType)
+{
+	return MsgInfo(module, msgType);
+}
+
+
 QDebug operator<<(QDebug dbg, const MsgInfo &mi)
 {
 	QString mtype;
@@ -189,5 +188,4 @@ QDebug operator<<(QDebug dbg, const MsgInfo &mi)
 	dbg << QString("<%1%2>").arg(mi.module(), mtype).toUtf8().constData();
 	return dbg;
 }
-#endif
 

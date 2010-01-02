@@ -55,12 +55,6 @@ void Socket::connectToBoinc(const QString &host, quint16 port)
 
 void Socket::disconnectFromBoinc()
 {
-	m_sockMutex.lock();
-	if (m_socket != 0) {
-		m_socket->disconnectFromHost();
-		m_socket->deleteLater();
-		m_socket = 0;
-	}
 	// Vyprázdnime buffer správ
 	m_msgFrontMutex.lock();
 	while (!m_msgFront.empty()) {
@@ -70,8 +64,11 @@ void Socket::disconnectFromBoinc()
 		}
 		m_msgFront.clear();
 	}
+	if (isRunning()) {
+		m_msgFront.append(QByteArray());
+		m_msgFrontLength.release();
+	}
 	m_msgFrontMutex.unlock();
-	m_sockMutex.unlock();
 }
 
 
@@ -151,7 +148,6 @@ void Socket::run()
 	}
 	else {
 		disconnectFromBoinc();
-		return;
 	}
 	forever {
 		m_msgFrontLength.acquire();
@@ -161,7 +157,7 @@ void Socket::run()
 
 		// Ukončenie vlákna
 		if (data.isNull()) {
-			return;
+			break;
 		}
 
 		// Zápi dát
@@ -169,7 +165,7 @@ void Socket::run()
 		if (m_socket == 0) {
 			m_sockMutex.unlock();
 			emit dataRecived(QByteArray());
-			return;
+			break;
 		}
 		m_socket->write(data);
 		m_socket->write("\003", 1);
@@ -181,20 +177,38 @@ void Socket::run()
 
 		// Čítanie dát
 		m_sockMutex.lock();
+		QByteArray ret;
 		if (m_socket == 0) {
 			m_sockMutex.unlock();
 			emit dataRecived(QByteArray());
-			return;
+			break;
 		}
-		m_socket->waitForReadyRead(10000);
-		QByteArray ret = m_socket->readAll();
+		forever {
+			m_socket->waitForReadyRead(10000);
+			const QByteArray dataPart = m_socket->readAll();
+			ret.append(dataPart);
+			qDebug() << dataPart;
+			if (dataPart.isNull() || dataPart.length() == 0 || dataPart[dataPart.length() - 1] == '\003') {
+				break;
+			}
+		}
 		m_sockMutex.unlock();
 #ifdef DEBUG_BOINC_COMMUNICATION
 		qDebug() << debugMsgInfo(this, "In") << ret;
 #endif    /* ----- #ifndef DEBUG_BOINC_COMMUNICATION ----- */
 		emit dataRecived(ret);
-		disconnectFromBoinc();
 	}
+
+	m_sockMutex.lock();
+	if (m_socket != 0) {
+		m_socket->disconnectFromHost();
+		if (m_socket->state() == QAbstractSocket::ClosingState) {
+			m_socket->waitForDisconnected(2000);
+		}
+		m_socket->deleteLater();
+		m_socket = 0;
+	}
+	m_sockMutex.unlock();
 }
 
 

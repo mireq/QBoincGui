@@ -27,32 +27,90 @@ namespace InfoBoinc {
 
 /**
  * \class Socket
+ * \brief %Socket pre pripojenie sa k vzdialenému, alebo lokálnemu klientovi BOINC.
+ * \ingroup InfoBoinc
  */
 class Socket: public QThread
 {
 Q_OBJECT
 Q_ENUMS(State)
+/**
+ * Približný stav socketu (nemusí byť 100% správny kvôli tomu, že so socketom sa
+ * pracuje v inom vlákne).
+ */
 Q_PROPERTY(State state READ state NOTIFY stateChanged)
 public:
+	/**
+	 * Vytvorenie nového socketu pre komunikáciu s BOINC.
+	 */
 	Socket(QObject *parent = 0);
+
+	/**
+	 * Zrušenie socketu a prípadné odpojenie od klienta.
+	 */
 	~Socket();
+
+	/**
+	 * \brief Pripojenie sa ku klientovi.
+	 * Volaním tejto metódy sa ukončí doteraz otvorené spojenie (ak nejaké
+	 * existovalo) a vytvorí sa nové spojenie s klientom na stroji \a host
+	 * počúvajúcom na porte \a port.
+	 */
 	void connectToBoinc(const QString &host, quint16 port);
+
+	/**
+	 * \brief Odpojenie sa od klienta.
+	 * Volaním tejto funkcie sa zastavia prebiehajúce úlohy a Socket::dataRecived
+	 * bude emitovať \e null hodnoty namiesto výsledkov volania.
+	 */
 	void disconnectFromBoinc();
 
+	/**
+	 * Stav pripojenia ku klientovi.
+	 */
 	enum State {
-		Unconnected,
-		Connecting,
-		Connected,
-		Disconnecting
+        Unconnected,  /**< Odpojený od klienta.        */
+        Connecting,   /**< Pripájanie sa ku klientovi. */
+        Connected,    /**< Pripojený.                  */
+        Disconnecting /**< Odpájanie sa od klienta.    */
 	};
+
+	/**
+	 * Vráti stav pripojenia ku klientovi.
+	 */
 	State state();
 
+	/**
+	 * Odoslanie dát \a data BOINC klientovi. Odosielanie a príjem dát fungujú
+	 * acynchrónne, preto funkcia nevracia odpoveď klienta, ani žiaden chybový
+	 * kód. V prípade vyskytnutia sa chyby emituje Socket::dataRecived \e null
+	 * hodnotu. Odpovede prichádzajú v rovnakom poradí, v a kom boli zaslané
+	 * dotazy.
+	 */
 	void sendData(const QByteArray &data);
 
 signals:
+	/**
+	 * Tento signál sa emituje pri zmene stavu socketu. Pretože so socketom sa
+	 * pracuje v inom vlákne nemusí zodpovedať emitovaný stav aktuálnemu stavu
+	 * socketu.
+	 */
 	void stateChanged(Socket::State state);
+
+	/**
+	 * Pri prijatí dát sa emituje tento signál. Ak došlo k chybe pri prenose
+	 * emituje sa namiesto prijatých dát \e null. V prípade, že socket bol
+	 * odpojený a vo vstupnom bufferi ešte ostali neodoslané správy pre každú
+	 * túto správu sa emituje \e null odpoveď podobne ako keby došlo k chybe pri
+	 * prenose.
+	 */
 	void dataRecived(const QByteArray &data);
-	void error(const QString &error);
+
+	/**
+	 * Tento signál sa emituje ak nastala chyba socketu. Reťazec \a errorMsg
+	 * obsahuje chybovú správu socketu.
+	 */
+	void error(const QString &errorMsg);
 
 private slots:
 	void updateSocketState(QAbstractSocket::SocketState socketState);

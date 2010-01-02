@@ -1,0 +1,38 @@
+/**
+ * \page Compile Kompilácia
+ *
+ * Pre vygenerovanie makefile súborov použiva tento projekt systém CMake. Pre
+ * obyčajné vybenerovanie Unix Makefile stačí vytvoriť pracovný adresár a v ňom
+ * spustiť <tt>cmake cesta k adresáru so zdrojovými kódmi</tt>.
+ *
+ * Členovia vývojového tímu by mali použiť prepínač
+ * <tt>-DCMAKE_BUILD_TYPE=Debug</tt>. Pri použití tohto prepínača sa do
+ * výstupných súborov zakompilujú debug symboly a zapnú sa extra varovania
+ * kompilátora.
+ *
+ * Zobraziť a editovať voľby je možné zadaním príkazu make edit_cache v
+ * pracovnom adresári.
+ *
+ * \section Compile_Volby Voľby pre kompiláciu
+ * <table>
+ *   <tr><th>Názov</th><th>Popis</th><th>Typ</th><th>Štandardne</th></tr>
+ *   <tr>
+ *     <td>DEBUG_BOINC_COMMUNICATION</td>
+ *     <td>Zapne výpis komunikácie s klientom</td>
+ *     <td>ON|OFF</td>
+ *     <td>OFF</td>
+ *   </tr>
+ *   <tr>
+ *     <td>DEBUG_MSG_COLORING</td>
+ *     <td>Zapne farebné výpisy s použitím ANSI escape sekvencií</td>
+ *     <td>ON|OFF</td>
+ *     <td>OFF</td>
+ *   </tr>
+ *   <tr>
+ *     <td>DEBUG_MSG_COLORING_256</td>
+ *     <td>Pri farebnom výpise zapne rozšírenie pre 256 farieb (xterm256)</td>
+ *     <td>ON|OFF</td>
+ *     <td>OFF</td>
+ *   </tr>
+ * </table>
+ */
