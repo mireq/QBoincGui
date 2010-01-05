@@ -30,9 +30,10 @@ Socket::Socket(QObject *parent)
 	  m_host(),
 	  m_port(0),
 	  m_socket(0),
-	  m_state(Unconnected),
+	  m_state(UnconnectedState),
 	  m_msgFrontLength(0)
 {
+	connect(this, SIGNAL(finished()), SLOT(setFinishedState()));
 	qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
 	qRegisterMetaType<QAbstractSocket::SocketError>("QAbstractSocket::SocketError");
 }
@@ -56,14 +57,8 @@ void Socket::connectToBoinc(const QString &host, quint16 port)
 void Socket::disconnectFromBoinc()
 {
 	// Vyprázdnime buffer správ
+	clearInputBuffer();
 	m_msgFrontMutex.lock();
-	while (!m_msgFront.empty()) {
-		m_msgFrontLength.acquire(m_msgFront.length());
-		for (int i = 0; i < m_msgFront.length(); ++i) {
-			emit dataRecived(QByteArray());
-		}
-		m_msgFront.clear();
-	}
 	if (isRunning()) {
 		m_msgFront.append(QByteArray());
 		m_msgFrontLength.release();
@@ -89,20 +84,21 @@ void Socket::sendData(const QByteArray &data)
 
 void Socket::updateSocketState(QAbstractSocket::SocketState socketState)
 {
-	State newState = Unconnected;
+	State newState = UnconnectedState;
 	switch(socketState)
 	{
-		case QAbstractSocket::UnconnectedState: newState = Unconnected; break;
+		case QAbstractSocket::UnconnectedState: newState = UnconnectedState; break;
 		// Oba stavy označuj pripájanie sa
 		case QAbstractSocket::HostLookupState:
-		case QAbstractSocket::ConnectingState:  newState = Connecting; break;
-		case QAbstractSocket::ConnectedState:   newState = Connected; break;
-		case QAbstractSocket::ClosingState:     newState = Disconnecting; break;
+		case QAbstractSocket::ConnectingState:  newState = ConnectingState; break;
+		case QAbstractSocket::ConnectedState:   newState = ConnectedState; break;
+		case QAbstractSocket::ClosingState:     newState = DisconnectingState; break;
 		default: break;
 	}
 	if (newState != m_state) {
-		if (newState == Unconnected) {
+		if (newState == UnconnectedState) {
 			disconnectFromBoinc();
+			return;
 		}
 		m_state = newState;
 #ifdef DEBUG_BOINC_COMMUNICATION
@@ -128,11 +124,34 @@ void Socket::emitError()
 }
 
 
+void Socket::setFinishedState()
+{
+	m_state = UnconnectedState;
+	emit stateChanged(m_state);
+}
+
+
+void Socket::clearInputBuffer()
+{
+	m_msgFrontMutex.lock();
+	while (!m_msgFront.empty()) {
+		m_msgFrontLength.acquire(m_msgFront.length());
+		for (int i = 0; i < m_msgFront.length(); ++i) {
+			if (!m_msgFront.at(i).isNull()) {
+				emit dataRecived(QByteArray());
+			}
+		}
+		m_msgFront.clear();
+	}
+	m_msgFrontMutex.unlock();
+}
+
+
 void Socket::run()
 {
 	m_sockMutex.lock();
 	if (m_socket != 0) {
-		m_socket->deleteLater();
+		delete m_socket;
 		m_socket = 0;
 	}
 	m_socket = new QTcpSocket;
@@ -141,7 +160,7 @@ void Socket::run()
 	m_socket->connectToHost(m_host, m_port);
 
 	m_sockMutex.unlock();
-	if (m_socket->waitForConnected(30000)) {
+	if (m_socket->waitForConnected(ConnectWait)) {
 #ifdef DEBUG_BOINC_COMMUNICATION
 		qDebug() << debugMsgInfo(this) << "Connected to boinc client!";
 #endif    /* ----- #ifndef DEBUG_BOINC_COMMUNICATION ----- */
@@ -160,7 +179,7 @@ void Socket::run()
 			break;
 		}
 
-		// Zápi dát
+		// Zápis dát
 		m_sockMutex.lock();
 		if (m_socket == 0) {
 			m_sockMutex.unlock();
@@ -184,11 +203,14 @@ void Socket::run()
 			break;
 		}
 		forever {
-			m_socket->waitForReadyRead(10000);
+			m_socket->waitForReadyRead(ReadWait);
 			const QByteArray dataPart = m_socket->readAll();
 			ret.append(dataPart);
-			qDebug() << dataPart;
-			if (dataPart.isNull() || dataPart.length() == 0 || dataPart[dataPart.length() - 1] == '\003') {
+			if (dataPart.isNull() || dataPart.size() == 0) {
+				break;
+			}
+			else if (dataPart[dataPart.size() - 1] == '\003') {
+				ret.resize(ret.size() - 1);
 				break;
 			}
 		}
@@ -203,12 +225,14 @@ void Socket::run()
 	if (m_socket != 0) {
 		m_socket->disconnectFromHost();
 		if (m_socket->state() == QAbstractSocket::ClosingState) {
-			m_socket->waitForDisconnected(2000);
+			m_socket->waitForDisconnected(DisconnectWait);
 		}
-		m_socket->deleteLater();
+		delete m_socket;
 		m_socket = 0;
 	}
 	m_sockMutex.unlock();
+	clearInputBuffer();
+	exit(0);
 }
 
 
@@ -217,10 +241,10 @@ QDebug operator<<(QDebug dbg, Socket::State state)
 {
 	dbg.nospace() << "Socket::";
 	switch(state) {
-		case Socket::Unconnected:   dbg << "Unconnected"; break;
-		case Socket::Connecting:    dbg << "Connecting"; break;
-		case Socket::Connected:     dbg << "Connected"; break;
-		case Socket::Disconnecting: dbg << "Disconnecting"; break;
+		case Socket::UnconnectedState:   dbg << "UnconnectedState"; break;
+		case Socket::ConnectingState:    dbg << "ConnectingState"; break;
+		case Socket::ConnectedState:     dbg << "ConnectedState"; break;
+		case Socket::DisconnectingState: dbg << "DisconnectingState"; break;
 	}
 	return dbg.space();
 }

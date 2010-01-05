@@ -33,13 +33,13 @@ include_directories(
 	${QT_INCLUDES}
 )
 
-link_directories(${CMAKE_CURRENT_BINARY_DIR}/InfoBoinc ${CMAKE_CURRENT_BINARY_DIR}/GuiBoinc)
+link_directories(${CMAKE_CURRENT_BINARY_DIR}/InfoBoinc ${CMAKE_CURRENT_BINARY_DIR}/src)
 
 add_subdirectory(InfoBoinc)
-add_subdirectory(GuiBoinc)
+add_subdirectory(src)
 
 add_executable(qboincgui main.cpp)
-target_link_libraries(qboincgui ${QT_LIBRARIES} InfoBoinc)
+target_link_libraries(qboincgui ${QT_LIBRARIES} AppLib InfoBoinc)
 
 install(TARGETS qboincgui
 	RUNTIME

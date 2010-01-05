@@ -69,10 +69,10 @@ public:
 	 * Stav pripojenia ku klientovi.
 	 */
 	enum State {
-        Unconnected,  /**< Odpojený od klienta.        */
-        Connecting,   /**< Pripájanie sa ku klientovi. */
-        Connected,    /**< Pripojený.                  */
-        Disconnecting /**< Odpájanie sa od klienta.    */
+		UnconnectedState,  /**< Odpojený od klienta.        */
+		ConnectingState,   /**< Pripájanie sa ku klientovi. */
+		ConnectedState,    /**< Pripojený.                  */
+		DisconnectingState /**< Odpájanie sa od klienta.    */
 	};
 
 	/**
@@ -115,9 +115,15 @@ signals:
 private slots:
 	void updateSocketState(QAbstractSocket::SocketState socketState);
 	void emitError();
+	void setFinishedState();
 
 private:
+	void clearInputBuffer();
 	virtual void run();
+
+	static const unsigned long ConnectWait = 30000;
+	static const unsigned long ReadWait = 10000;
+	static const unsigned long DisconnectWait = 2000;
 
 	/* ====================  DATA MEMBERS  ==================== */
 	QString m_host;

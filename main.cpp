@@ -14,9 +14,20 @@
  * =====================================================================================
  */
 
+#include <QtGlobal>
+#include <QtGui/QApplication>
+#include "debug.h"
+#include "src/Engine.h"
+
 extern "C"
-int main(int, char *[])
+int main(int argc, char *argv[])
 {
-	return 0;
+	qInstallMsgHandler(infoBoincMsgHandler);
+	QApplication app(argc, argv);
+	int ret = Engine::getInstance().initialize();
+	if (ret != 0) {
+		return ret;
+	}
+	return app.exec();
 }
 
