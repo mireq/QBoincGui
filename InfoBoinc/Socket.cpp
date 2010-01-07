@@ -25,13 +25,13 @@ Q_DECLARE_METATYPE(QAbstractSocket::SocketError)
 
 namespace InfoBoinc {
 
-Socket::Socket(QObject *parent)
-	: QThread(parent),
-	  m_host(),
-	  m_port(0),
-	  m_socket(0),
-	  m_state(UnconnectedState),
-	  m_msgFrontLength(0)
+Socket::Socket(QObject *parent):
+	QThread(parent),
+	m_host(),
+	m_port(0),
+	m_socket(0),
+	m_state(UnconnectedState),
+	m_msgFrontLength(0)
 {
 	connect(this, SIGNAL(finished()), SLOT(setFinishedState()));
 	qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
@@ -95,16 +95,12 @@ void Socket::updateSocketState(QAbstractSocket::SocketState socketState)
 		case QAbstractSocket::ClosingState:     newState = DisconnectingState; break;
 		default: break;
 	}
-	if (newState != m_state) {
-		if (newState == UnconnectedState) {
-			disconnectFromBoinc();
-			return;
-		}
-		m_state = newState;
-#ifdef DEBUG_BOINC_COMMUNICATION
-		qDebug() << debugMsgInfo(this, "State") << m_state;
-#endif    /* ----- #ifndef DEBUG_BOINC_COMMUNICATION ----- */
-		emit stateChanged(m_state);
+
+	if (newState == UnconnectedState) {
+		disconnectFromBoinc();
+	}
+	else {
+		setState(newState);
 	}
 }
 
@@ -126,8 +122,7 @@ void Socket::emitError()
 
 void Socket::setFinishedState()
 {
-	m_state = UnconnectedState;
-	emit stateChanged(m_state);
+	setState(UnconnectedState);
 }
 
 
@@ -232,7 +227,19 @@ void Socket::run()
 	}
 	m_sockMutex.unlock();
 	clearInputBuffer();
-	exit(0);
+}
+
+
+void Socket::setState(State state)
+{
+	if (state == m_state) {
+		return;
+	}
+	m_state = state;
+#ifdef DEBUG_BOINC_COMMUNICATION
+	qDebug() << debugMsgInfo(this, "State") << m_state;
+#endif    /* ----- #ifndef DEBUG_BOINC_COMMUNICATION ----- */
+	emit stateChanged(m_state);
 }
 
 

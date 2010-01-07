@@ -23,11 +23,11 @@ namespace InfoBoinc {
 
 quint32 Session::m_nextId = 1;
 
-Session::Session(QObject *parent)
-	: QObject(parent),
-	  m_socket(0),
-	  m_state(UnconnectedState),
-	  m_id(m_nextId)
+Session::Session(QObject *parent):
+	QObject(parent),
+	m_socket(0),
+	m_state(UnconnectedState),
+	m_id(m_nextId)
 {
 	m_nextId++;
 }

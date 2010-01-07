@@ -20,6 +20,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QMap>
 
+class ui_Master;
+
 namespace InfoBoinc {
 	class Session;
 } /* end of namespace InfoBoinc */
@@ -52,6 +54,7 @@ private:
 	/* ====================  DATA MEMBERS  ==================== */
 	typedef QMap<quint32, InfoBoinc::Session *> TSessions;
 	TSessions m_sessions;
+	ui_Master *m_uiMaster;
 }; /* -----  end of class Engine  ----- */
 
 #endif    /* ----- #ifndef ENGINE_H  ----- */

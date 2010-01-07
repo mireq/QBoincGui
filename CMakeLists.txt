@@ -38,7 +38,12 @@ link_directories(${CMAKE_CURRENT_BINARY_DIR}/InfoBoinc ${CMAKE_CURRENT_BINARY_DI
 add_subdirectory(InfoBoinc)
 add_subdirectory(src)
 
-add_executable(qboincgui main.cpp)
+set(AppLib_QRC
+	src/ui_Advanced/resources.qrc
+)
+qt4_add_resources(AppLib_QRC_SRCS ${AppLib_QRC})
+
+add_executable(qboincgui main.cpp ${AppLib_QRC_SRCS})
 target_link_libraries(qboincgui ${QT_LIBRARIES} AppLib InfoBoinc)
 
 install(TARGETS qboincgui

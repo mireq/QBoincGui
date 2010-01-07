@@ -17,14 +17,14 @@
 #include <QtCore/QStringList>
 #include <QtGui/QApplication>
 #include "Session.h"
-
+#include "ui_Advanced/ui_Advanced.h"
 #include "Engine.h"
-#include <QDebug>
 
 using namespace InfoBoinc;
 
-Engine::Engine()
-	: QObject()
+Engine::Engine():
+	QObject(),
+	m_uiMaster(0)
 {
 	startTimer(RefreshRate);
 }
@@ -32,6 +32,11 @@ Engine::Engine()
 
 Engine::~Engine()
 {
+	if (m_uiMaster != 0) {
+		m_uiMaster->deleteLater();
+		m_uiMaster = 0;
+	}
+
 	foreach (Session *session, m_sessions) {
 		session->deleteLater();
 	}
@@ -47,6 +52,7 @@ Engine &Engine::getInstance()
 
 int Engine::initialize()
 {
+	m_uiMaster = new ui_Advanced;
 	return 0;
 }
 

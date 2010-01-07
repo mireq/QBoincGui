@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="/">
+    <file>icons/actions/application-exit.png</file>
+    <file>icons/actions/tab-close.png</file>
+    <file>icons/actions/tab-new.png</file>
+  </qresource>
+</RCC>

@@ -120,6 +120,7 @@ private slots:
 private:
 	void clearInputBuffer();
 	virtual void run();
+	void setState(State state);
 
 	static const unsigned long ConnectWait = 30000;
 	static const unsigned long ReadWait = 10000;
