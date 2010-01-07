@@ -32,6 +32,10 @@ public:
 	/* ====================  LIFECYCLE     ==================== */
 	MainWindow(QWidget *parent = 0);
 	~MainWindow();
+
+private slots:
+	void on_actionAddClient_triggered();
+
 private:
 	Ui::MainWindow *ui;
 

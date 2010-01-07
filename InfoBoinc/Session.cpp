@@ -54,6 +54,15 @@ Session::State Session::state() const
 }
 
 
+void Session::setState(State state)
+{
+	if (state != m_state) {
+	}
+	m_state = state;
+	emit stateChanged(state);
+}
+
+
 void Session::openSession(const QString &host, quint16 port, const QString &password)
 {
 	closeSession();
@@ -65,6 +74,12 @@ void Session::openSession(const QString &host, quint16 port, const QString &pass
 	connect(m_socket, SIGNAL(stateChanged(Socket::State)), SLOT(socketStateChanged(Socket::State)));
 	connect(m_socket, SIGNAL(dataRecived(const QByteArray &)), SLOT(processData(const QByteArray &)));
 	m_socket->connectToBoinc(m_host, m_port);
+}
+
+
+void Session::setDirectory(const QString &directory)
+{
+	m_directory = directory;
 }
 
 
@@ -105,15 +120,6 @@ void Session::socketStateChanged(Socket::State state)
 		m_socket = 0;
 		setState(UnconnectedState);
 	}
-}
-
-
-void Session::setState(State state)
-{
-	if (state != m_state) {
-	}
-	m_state = state;
-	emit stateChanged(state);
 }
 
 

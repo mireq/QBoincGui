@@ -37,7 +37,8 @@ public:
 
 	static Engine &getInstance();
 	int initialize();
-	void addSession(const QString &host, quint16 port, const QString &password);
+	quint32 addSession(const QString &host, quint16 port, const QString &password);
+	InfoBoinc::Session *session(quint32 id);
 
 private:
 	virtual void timerEvent(QTimerEvent *event);

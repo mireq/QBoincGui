@@ -15,14 +15,8 @@ else(CMAKE_BUILD_TYPE MATCHES Debug)
 	add_definitions(-DQT_NO_DEBUG)
 endif(CMAKE_BUILD_TYPE MATCHES Debug)
 
-option(DEBUG_BOINC_COMMUNICATION "Build the boincmgr - boinc communication debugging code" OFF)
-option(DEBUG_MSG_COLORING "Colored debug messages" OFF)
-option(DEBUG_MSG_COLORING_256 "256 colors in debug messages" OFF)
-
 find_package(Qt4 4.5.0 COMPONENTS QtCore QtGui QtNetwork QtXml REQUIRED)
 include(${QT_USE_FILE})
-
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 include_directories(
 	"${PROJECT_BINARY_DIR}"
@@ -37,19 +31,6 @@ link_directories(${CMAKE_CURRENT_BINARY_DIR}/InfoBoinc ${CMAKE_CURRENT_BINARY_DI
 
 add_subdirectory(InfoBoinc)
 add_subdirectory(src)
-
-set(AppLib_QRC
-	src/ui_Advanced/resources.qrc
-)
-qt4_add_resources(AppLib_QRC_SRCS ${AppLib_QRC})
-
-add_executable(qboincgui main.cpp ${AppLib_QRC_SRCS})
-target_link_libraries(qboincgui ${QT_LIBRARIES} AppLib InfoBoinc)
-
-install(TARGETS qboincgui
-	RUNTIME
-	DESTINATION bin
-	COMPONENT app)
 
 # --- CPack ---
 set(CPACK_PACKAGE_NAME "QBoincGui")

@@ -57,11 +57,18 @@ int Engine::initialize()
 }
 
 
-void Engine::addSession(const QString &host, quint16 port, const QString &password)
+quint32 Engine::addSession(const QString &host, quint16 port, const QString &password)
 {
 	Session *session = new Session;
 	m_sessions[session->id()] = session;
 	session->openSession(host, port, password);
+	return session->id();
+}
+
+
+InfoBoinc::Session *Engine::session(quint32 id)
+{
+	return m_sessions[id];
 }
 
 
