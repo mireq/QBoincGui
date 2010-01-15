@@ -1,5 +1,5 @@
 /*
- * =====================================================================================
+ * =====================================================================
  *
  *       Filename:  ui_Advanced.h
  *
@@ -11,7 +11,7 @@
  *         Author:  Miroslav Bendík
  *        Company:  LinuxOS.sk
  *
- * =====================================================================================
+ * =====================================================================
  */
 
 #ifndef UI_STANDARD_H
@@ -25,9 +25,13 @@ namespace ui_AdvancedNS {
 
 class ui_Advanced: public ui_Master
 {
+Q_OBJECT
 public:
 	ui_Advanced();
 	~ui_Advanced();
+
+public slots:
+	virtual void addSession(InfoBoinc::Session::IdType id);
 
 private:
 	ui_AdvancedNS::MainWindow *m_mainWindow;

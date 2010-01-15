@@ -1,5 +1,5 @@
 /*
- * =====================================================================================
+ * =====================================================================
  *
  *       Filename:  Engine.h
  *
@@ -11,7 +11,7 @@
  *         Author:  Miroslav Bendík
  *        Company:  LinuxOS.sk
  *
- * =====================================================================================
+ * =====================================================================
  */
 
 #ifndef ENGINE_H
@@ -19,12 +19,9 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QMap>
+#include "Session.h"
 
 class ui_Master;
-
-namespace InfoBoinc {
-	class Session;
-} /* end of namespace InfoBoinc */
 
 /**
  * \class Engine
@@ -36,9 +33,13 @@ public:
 	~Engine();
 
 	static Engine &getInstance();
+	void initializeUi();
 	int initialize();
-	quint32 addSession(const QString &host, quint16 port, const QString &password);
-	InfoBoinc::Session *session(quint32 id);
+	InfoBoinc::Session::IdType addSession(const QString &host, quint16 port, const QString &password, const QString &directory = QString());
+	InfoBoinc::Session *session(InfoBoinc::Session::IdType id);
+
+signals:
+	void sessionAdded(InfoBoinc::Session::IdType id);
 
 private:
 	virtual void timerEvent(QTimerEvent *event);
@@ -53,7 +54,7 @@ private:
 	Q_DISABLE_COPY(Engine)
 private:
 	/* ====================  DATA MEMBERS  ==================== */
-	typedef QMap<quint32, InfoBoinc::Session *> TSessions;
+	typedef QMap<InfoBoinc::Session::IdType, InfoBoinc::Session *> TSessions;
 	TSessions m_sessions;
 	ui_Master *m_uiMaster;
 }; /* -----  end of class Engine  ----- */

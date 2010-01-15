@@ -21,7 +21,7 @@
 
 namespace InfoBoinc {
 
-quint32 Session::m_nextId = 1;
+Session::IdType Session::m_nextId = 1;
 
 Session::Session(QObject *parent):
 	QObject(parent),
@@ -42,7 +42,7 @@ Session::~Session()
 }
 
 
-quint32 Session::id() const
+Session::IdType Session::id() const
 {
 	return m_id;
 }
@@ -54,12 +54,30 @@ Session::State Session::state() const
 }
 
 
+const QString &Session::host() const
+{
+	return m_host;
+}
+
+
+quint16 Session::port() const
+{
+	return m_port;
+}
+
+
+const QString &Session::password() const
+{
+	return m_password;
+}
+
+
 void Session::setState(State state)
 {
 	if (state != m_state) {
 	}
 	m_state = state;
-	emit stateChanged(state);
+	emit stateChanged(state, m_id);
 }
 
 

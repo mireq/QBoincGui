@@ -1,5 +1,5 @@
 /*
- * =====================================================================================
+ * =====================================================================
  *
  *       Filename:  AddClientWizard.cpp
  *
@@ -11,7 +11,7 @@
  *         Author:  Miroslav Bendík
  *        Company:  LinuxOS.sk
  *
- * =====================================================================================
+ * =====================================================================
  */
 
 #include <QtCore/QVariant>
@@ -27,14 +27,13 @@
 #include <limits>
 #include "AddClientWizard.h"
 
-#include <QDebug>
-
 namespace ui_AdvancedNS {
 
 AddClientWizard::AddClientWizard(QWidget *parent):
 	QWizard(parent)
 {
 	setWindowTitle(tr("Add client"));
+	setPixmap(QWizard::LogoPixmap, QPixmap(":/icons/logo/boinc_glosy_64.png"));
 	addPage(new ClientTypeWizardPage);
 	addPage(new ClientDataWizardPage);
 }

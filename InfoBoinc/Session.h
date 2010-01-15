@@ -31,11 +31,17 @@ namespace InfoBoinc {
 class Session: public QObject
 {
 Q_OBJECT
+
 /**
  * Stav, v ktorom sa nachádza komunikačný kanál s BOINC-om.
  */
 Q_PROPERTY(State state READ state NOTIFY stateChanged)
 public:
+	/**
+	 * Typ reprezentujúci ID spojenia s BOINC-om.
+	 */
+	typedef quint32 IdType;
+
 	/**
 	 * Typ chyby, ktorá nastala.
 	 */
@@ -67,13 +73,28 @@ public:
 	 * Vráti unikátne číslo spojenia.
 	 */
 
-	quint32 id() const;
+	IdType id() const;
 
 	/**
 	 * Vráti aktuálny stav spojenia s BOINC-om.
 	 * \sa stateChanged()
 	 */
 	Session::State state() const;
+
+	/**
+	 * Vráti host, s ktorým spája.
+	 */
+	const QString &host() const;
+
+	/**
+	 * Vráti port, ktorým sa session pripája na klienta.
+	 */
+	quint16 port() const;
+
+	/**
+	 * Vráti heslo, ktoré sa používa pre pripojenie ku klientovi.
+	 */
+	const QString &password() const;
 
 	/**
 	 * Nastavenie pracovného adresára na \a directory;
@@ -113,7 +134,7 @@ signals:
 	 * Signál sa emituje pri zmene stavu spojenia.
 	 * \sa state()
 	 */
-	void stateChanged(Session::State state);
+	void stateChanged(Session::State state, Session::IdType id);
 
 private slots:
 	void processData(const QByteArray &data);

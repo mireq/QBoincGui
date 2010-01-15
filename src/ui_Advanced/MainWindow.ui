@@ -15,27 +15,19 @@
    <string>Boinc gui</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QTreeWidget" name="mainTree">
-       <property name="alternatingRowColors">
-        <bool>true</bool>
+      <widget class="ui_AdvancedNS::BoincTree" name="boincTree" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="sortingEnabled">
-        <bool>true</bool>
-       </property>
-       <property name="headerHidden">
-        <bool>true</bool>
-       </property>
-       <column>
-        <property name="text">
-         <string notr="true">1</string>
-        </property>
-       </column>
       </widget>
       <widget class="QStackedWidget" name="stackedWidget">
        <property name="sizePolicy">
@@ -73,7 +65,7 @@
   <action name="actionAddClient">
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/icons/actions/tab-new.png</normaloff>:/icons/actions/tab-new.png</iconset>
+     <normaloff>:/icons/16x16/actions/tab-new.png</normaloff>:/icons/16x16/actions/tab-new.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Add client</string>
@@ -82,7 +74,7 @@
   <action name="actionRemoveClient">
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/icons/actions/tab-close.png</normaloff>:/icons/actions/tab-close.png</iconset>
+     <normaloff>:/icons/16x16/actions/tab-close.png</normaloff>:/icons/16x16/actions/tab-close.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Remove client</string>
@@ -91,7 +83,7 @@
   <action name="actionQuit">
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/icons/actions/application-exit.png</normaloff>:/icons/actions/application-exit.png</iconset>
+     <normaloff>:/icons/16x16/actions/application-exit.png</normaloff>:/icons/16x16/actions/application-exit.png</iconset>
    </property>
    <property name="text">
     <string>Quit</string>
@@ -101,6 +93,14 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ui_AdvancedNS::BoincTree</class>
+   <extends>QWidget</extends>
+   <header>ui_Advanced/BoincTree.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../resources.qrc"/>
  </resources>

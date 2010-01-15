@@ -9,19 +9,21 @@ set(QBoincGui_SRCS
 	Engine.cpp
 	ui_Master.cpp
 	ui_Advanced/AddClientWizard.cpp
+	ui_Advanced/BoincTree.cpp
 	ui_Advanced/MainWindow.cpp
 	ui_Advanced/ui_Advanced.cpp
 )
 
 set(QBoincGui_HDRS
-	ui_Master.h
-	ui_Advanced/ui_Advanced.h
 )
 
 set(QBoincGui_MOC_HDRS
 	Engine.h
+	ui_Master.h
 	ui_Advanced/AddClientWizard.h
+	ui_Advanced/BoincTree.h
 	ui_Advanced/MainWindow.h
+	ui_Advanced/ui_Advanced.h
 )
 
 set(QBoincGui_UIS

@@ -3,8 +3,8 @@ project(BoincGui C CXX)
 cmake_minimum_required(VERSION 2.4)
 cmake_policy(SET CMP0003 NEW)
 
-set(CMAKE_CXX_FLAGS_RELEASE "-O2 -Wall -DNDEBUG")
-set(CMAKE_CXX_FLAGS_DEBUG   "-O2 -g3 -ggdb -Wall -Wextra -DDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "-Wall -DNDEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG   "-g3 -ggdb -Wall -Wextra -DDEBUG")
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
 	message(STATUS "Configured to compile including full debug information in the executables")

@@ -1,5 +1,5 @@
 /*
- * =====================================================================================
+ * =====================================================================
  *
  *       Filename:  MainWindow.cpp
  *
@@ -11,7 +11,7 @@
  *         Author:  Miroslav Bendík
  *        Company:  LinuxOS.sk
  *
- * =====================================================================================
+ * =====================================================================
  */
 
 #include "AddClientWizard.h"
@@ -36,6 +36,12 @@ MainWindow::~MainWindow()
 }
 
 
+BoincTree *MainWindow::boincTree() const
+{
+	return ui->boincTree;
+}
+
+
 void MainWindow::on_actionAddClient_triggered()
 {
 	AddClientWizard wizard;
@@ -43,12 +49,11 @@ void MainWindow::on_actionAddClient_triggered()
 		QString host = wizard.field("host").toString();
 		quint16 port = wizard.field("port").toUInt();
 		QString pass = wizard.field("password").toString();
-		quint32 id = Engine::getInstance().addSession(host, port, pass);
 		QString directory;
 		if (wizard.field("isLocal").toBool()) {
 			QString directory = wizard.field("directory").toString();
-			Engine::getInstance().session(id)->setDirectory(directory);
 		}
+		Engine::getInstance().addSession(host, port, pass, directory);
 	}
 }
 

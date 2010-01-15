@@ -1,5 +1,5 @@
 /*
- * =====================================================================================
+ * =====================================================================
  *
  *       Filename:  MainWindow.h
  *
@@ -11,7 +11,7 @@
  *         Author:  Miroslav Bendík
  *        Company:  LinuxOS.sk
  *
- * =====================================================================================
+ * =====================================================================
  */
 
 #ifndef MAINWINDOW_H
@@ -25,6 +25,8 @@ namespace Ui {
 
 namespace ui_AdvancedNS {
 
+class BoincTree;
+
 class MainWindow: public QMainWindow
 {
 Q_OBJECT
@@ -32,6 +34,7 @@ public:
 	/* ====================  LIFECYCLE     ==================== */
 	MainWindow(QWidget *parent = 0);
 	~MainWindow();
+	BoincTree *boincTree() const;
 
 private slots:
 	void on_actionAddClient_triggered();

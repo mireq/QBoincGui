@@ -1,5 +1,5 @@
 /*
- * =====================================================================================
+ * =====================================================================
  *
  *       Filename:  ui_Advanced.cpp
  *
@@ -11,13 +11,16 @@
  *         Author:  Miroslav Bendík
  *        Company:  LinuxOS.sk
  *
- * =====================================================================================
+ * =====================================================================
  */
 
+#include "BoincTree.h"
+#include "Engine.h"
 #include "MainWindow.h"
 #include "ui_Advanced.h"
 
 using namespace ui_AdvancedNS;
+using namespace InfoBoinc;
 
 ui_Advanced::ui_Advanced()
 {
@@ -29,5 +32,11 @@ ui_Advanced::ui_Advanced()
 ui_Advanced::~ui_Advanced()
 {
 	delete m_mainWindow;
+}
+
+
+void ui_Advanced::addSession(InfoBoinc::Session::IdType id)
+{
+	m_mainWindow->boincTree()->addSession(id);
 }
 

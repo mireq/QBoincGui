@@ -1,5 +1,5 @@
 /*
- * =====================================================================================
+ * =====================================================================
  *
  *       Filename:  Engine.cpp
  *
@@ -11,7 +11,7 @@
  *         Author:  Miroslav Bendík
  *        Company:  LinuxOS.sk
  *
- * =====================================================================================
+ * =====================================================================
  */
 
 #include <QtCore/QStringList>
@@ -50,23 +50,32 @@ Engine &Engine::getInstance()
 }
 
 
-int Engine::initialize()
+void Engine::initializeUi()
 {
 	m_uiMaster = new ui_Advanced;
+	connect(this, SIGNAL(sessionAdded(InfoBoinc::Session::IdType)), m_uiMaster, SLOT(addSession(InfoBoinc::Session::IdType)));
+}
+
+
+int Engine::initialize()
+{
+	initializeUi();
 	return 0;
 }
 
 
-quint32 Engine::addSession(const QString &host, quint16 port, const QString &password)
+Session::IdType Engine::addSession(const QString &host, quint16 port, const QString &password, const QString &directory)
 {
 	Session *session = new Session;
 	m_sessions[session->id()] = session;
+	session->setDirectory(directory);
 	session->openSession(host, port, password);
+	emit sessionAdded(session->id());
 	return session->id();
 }
 
 
-InfoBoinc::Session *Engine::session(quint32 id)
+InfoBoinc::Session *Engine::session(Session::IdType id)
 {
 	return m_sessions[id];
 }
