@@ -17,6 +17,7 @@
 #include <QtGui/QTreeWidget>
 #include <QtGui/QVBoxLayout>
 #include "Engine.h"
+#include "GuiIcon.h"
 #include "BoincTree.h"
 
 using namespace InfoBoinc;
@@ -70,19 +71,19 @@ void BoincTree::changeSessionState(Session::State state, Session::IdType id)
 	QString stateString;
 	switch (state) {
 		case Session::UnconnectedState:
-			item->setIcon(0, QIcon(":/icons/32x32/tree/connect_no.png"));
+			item->setIcon(0, GuiIcon("connect_no", "tree"));
 			stateString = tr("Unconnected");
 			break;
 		case Session::DisconnectingState:
-			item->setIcon(0, QIcon(":/icons/32x32/tree/connect_no.png"));
+			item->setIcon(0, GuiIcon("connect_no", "tree"));
 			stateString = tr("Disconnecting");
 			break;
 		case Session::ConnectingState:
-			item->setIcon(0, QIcon(":/icons/32x32/tree/connect_creating.png"));
+			item->setIcon(0, GuiIcon("connect_creating", "tree"));
 			stateString = tr("Connecting");
 			break;
 		case Session::ConnectedState:
-			item->setIcon(0, QIcon(":/icons/32x32/tree/connect_established.png"));
+			item->setIcon(0, GuiIcon("connect_established", "tree"));
 			stateString = tr("Connected");
 			break;
 	}

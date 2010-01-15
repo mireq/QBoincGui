@@ -6,6 +6,7 @@ include_directories(
 
 set(QBoincGui_SRCS
 	main.cpp
+	GuiIcon.cpp
 	Engine.cpp
 	ui_Master.cpp
 	ui_Advanced/AddClientWizard.cpp
@@ -15,6 +16,7 @@ set(QBoincGui_SRCS
 )
 
 set(QBoincGui_HDRS
+	GuiIcon.h
 )
 
 set(QBoincGui_MOC_HDRS
