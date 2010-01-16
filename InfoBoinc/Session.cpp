@@ -15,8 +15,8 @@
  */
 
 #include <QtCore/QCryptographicHash>
+#include <QtCore/QSet>
 #include "debug.h"
-#include "model/ProjectInfo.h"
 #include "Session.h"
 
 namespace InfoBoinc {
@@ -119,6 +119,13 @@ void Session::requestProjectStatus()
 }
 
 
+const ProjectInfo &Session::project(const QString &projectId) const
+{
+	QMap<QString, ProjectInfo>::const_iterator info = m_projects.find(projectId);
+	return info.value();
+}
+
+
 void Session::processData(const QByteArray &data)
 {
 	TProcessDataCallback callback = m_processDataCallbacks.takeFirst();
@@ -188,6 +195,16 @@ void Session::startAuthorisation()
 }
 
 
+void Session::createProjectData(const QString & /*projectId*/)
+{
+}
+
+
+void Session::removeProjectData(const QString & /*projectId*/)
+{
+}
+
+
 void Session::processAuth1(const QByteArray &data)
 {
 	QDomElement reply = getReply(data);
@@ -232,11 +249,40 @@ void Session::processProjectStatus(const QByteArray &data)
 		return;
 	}
 
+	// Aktuálny zoznam projektov
+	QSet<QString> projectsSet = QSet<QString>::fromList(m_projects.keys());
+
+	// Zistenie zmien v projektoch a ich aktualizácia
 	for (int i = 0; i < reply.childNodes().count(); ++i) {
 		QDomNode projectNode = reply.childNodes().at(i);
 		if (!projectNode.isElement()) {
 			continue;
 		}
+
+		const ProjectInfo project(projectNode.toElement());
+		const QString projectId = project.primaryKey();
+
+		QSet<QString>::iterator projectIterator = projectsSet.find(project.primaryKey());
+
+		// Projekt ešte nie je v zozname projektov
+		if (projectIterator == projectsSet.end()) {
+			m_projects.insert(projectId, project);
+			createProjectData(projectId);
+			emit projectAdded(projectId, m_id);
+		}
+		else {
+			if (project != this->project(projectId)) {
+				m_projects.insert(projectId, project);
+				emit projectChanged(projectId, m_id);
+			}
+			projectsSet.erase(projectIterator);
+		}
+	}
+
+	foreach(const QString &projectId, projectsSet) {
+		m_projects.remove(projectId);
+		emit projectRemoved(projectId, m_id);
+		removeProjectData(projectId);
 	}
 }
 

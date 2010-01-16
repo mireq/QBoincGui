@@ -35,10 +35,11 @@ public:
 	 * Typ položky v XML súbore.
 	 */
 	enum AttributeType {
-		StringAttribute, /**< Textový atribút.            */
-		BoolAttribute,   /**< Hodnoty \e true / \e false. */
-		IntAttribute,    /**< Celé číslo.                 */
-		DoubleAttribute  /**< Desatinné číslo.            */
+		StringAttribute,   /**< Textový atribút.            */
+		BoolAttribute,     /**< Hodnoty \e true / \e false. */
+		IntAttribute,      /**< Celé číslo.                 */
+		DoubleAttribute,   /**< Desatinné číslo.            */
+		TimestampAttribute /**< Časová pečiatka.            */
 	};
 
 	XMLAttributeMap();
@@ -64,9 +65,23 @@ public:
 	 */
 	void parseAttributes(const QDomElement &dom, const QMap<QString,AttributeType> &attributes);
 
+	/* ====================  OPERATORS     ==================== */
+	/**
+	 * Vráti \e true, ak sú 2 mapy atribútov identické.
+	 */
+	friend bool operator==(const XMLAttributeMap &lhs, const XMLAttributeMap &rhs);
+
+	/**
+	 * Vráti \e true, ak sú 2 mapy atribútov rozdielné.
+	 */
+	friend bool operator!=(const XMLAttributeMap &lhs, const XMLAttributeMap &rhs);
+
 private:
 	QMap<QString, QVariant> m_attributes;
 }; /* -----  end of class XMLAttributeMap  ----- */
+
+bool operator==(const XMLAttributeMap &lhs, const XMLAttributeMap &rhs);
+bool operator!=(const XMLAttributeMap &lhs, const XMLAttributeMap &rhs);
 
 } /* end of namespace InfoBoinc */
 

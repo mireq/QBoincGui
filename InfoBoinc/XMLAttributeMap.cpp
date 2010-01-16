@@ -14,6 +14,7 @@
  * =====================================================================================
  */
 
+#include <QtCore/QDateTime>
 #include <QtXml/QDomNode>
 #include "XMLAttributeMap.h"
 
@@ -54,14 +55,25 @@ void XMLAttributeMap::parseAttributes(const QDomElement &dom, const QMap<QString
 			AttributeType type = attrInfoIter.value();
 			QVariant value = node.toElement().text();
 			switch (type) {
-				case BoolAttribute:   value = QVariant(value.toBool());   break;
-				case IntAttribute:    value = QVariant(value.toInt());    break;
-				case DoubleAttribute: value = QVariant(value.toDouble()); break;
+				case BoolAttribute:      value = QVariant(value.toBool());   break;
+				case IntAttribute:       value = QVariant(value.toInt());    break;
+				case DoubleAttribute:    value = QVariant(value.toDouble()); break;
+				case TimestampAttribute: value = QVariant(QDateTime::fromTime_t(uint(value.toDouble())));
 				default: break;
 			}
 			m_attributes[attrInfoIter.key()] = value;
 		}
 	}
+}
+
+bool operator==(const XMLAttributeMap &lhs, const XMLAttributeMap &rhs)
+{
+	return lhs.m_attributes == rhs.m_attributes;
+}
+
+bool operator!=(const XMLAttributeMap &lhs, const XMLAttributeMap &rhs)
+{
+	return lhs.m_attributes != rhs.m_attributes;
 }
 
 } /* end of namespace InfoBoinc */

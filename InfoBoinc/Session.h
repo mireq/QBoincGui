@@ -20,6 +20,7 @@
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtXml/QDomNode>
+#include "model/ProjectInfo.h"
 #include "Socket.h"
 
 namespace InfoBoinc {
@@ -123,6 +124,8 @@ public slots:
 	 */
 	void requestProjectStatus();
 
+	const ProjectInfo &project(const QString &projectId) const;
+
 signals:
 	/**
 	 * Signál sa emituje v dôsledku chyby spôsobenej pri komunikácii s klientom,
@@ -135,6 +138,10 @@ signals:
 	 * \sa state()
 	 */
 	void stateChanged(Session::State state, Session::IdType id);
+
+	void projectAdded(const QString &projectId, Session::IdType id);
+	void projectRemoved(const QString &projectId, Session::IdType id);
+	void projectChanged(const QString &projectId, Session::IdType id);
 
 private slots:
 	void processData(const QByteArray &data);
@@ -152,6 +159,9 @@ private:
 	QDomElement getReply(const QByteArray &data);
 	void sendCommand(const QByteArray &command, TProcessDataCallback callback);
 	void startAuthorisation();
+
+	void createProjectData(const QString &projectId);
+	void removeProjectData(const QString &projectId);
 
 	/* ====================  CALLBACKS     ==================== */
 	void processAuth1(const QByteArray &data);
@@ -171,10 +181,13 @@ private:
 	quint16 m_port;
 	QString m_password;
 	QString m_directory;
+
+	/* ====================  MODEL DATA    ==================== */
+	QMap<QString, ProjectInfo> m_projects;
 }; /* -----  end of class Session  ----- */
 
 #ifndef QT_NO_DEBUG_STREAM
-QDebug operator<<(QDebug, Session::State state);
+QDebug operator<<(QDebug dbg, Session::State state);
 #endif
 
 } /* end of namespace InfoBoinc */
