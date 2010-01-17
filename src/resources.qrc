@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="/">
+    <file>icons/16x16/actions/documentinfo.png</file>
+    <file>icons/32x32/tree/computer.png</file>
     <file>icons/32x32/tree/connect_creating.png</file>
     <file>icons/32x32/tree/connect_established.png</file>
     <file>icons/32x32/tree/connect_no.png</file>

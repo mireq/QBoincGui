@@ -11,6 +11,8 @@ set(QBoincGui_SRCS
 	ui_Master.cpp
 	ui_Advanced/AddClientWizard.cpp
 	ui_Advanced/BoincTree.cpp
+	ui_Advanced/CoreBoincPlugin.cpp
+	ui_Advanced/InfoWidget.cpp
 	ui_Advanced/MainWindow.cpp
 	ui_Advanced/ui_Advanced.cpp
 )
@@ -24,6 +26,9 @@ set(QBoincGui_MOC_HDRS
 	ui_Master.h
 	ui_Advanced/AddClientWizard.h
 	ui_Advanced/BoincTree.h
+	ui_Advanced/CoreBoincPlugin.h
+	ui_Advanced/InfoWidget.h
+	ui_Advanced/BoincPlugin.h
 	ui_Advanced/MainWindow.h
 	ui_Advanced/ui_Advanced.h
 )

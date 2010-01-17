@@ -15,6 +15,7 @@
  */
 
 #include "AddClientWizard.h"
+#include "CoreBoincPlugin.h"
 #include "Engine.h"
 #include "Session.h"
 #include "MainWindow.h"
@@ -27,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent):
 	ui(new Ui::MainWindow)
 {
 	ui->setupUi(this);
+	m_coreBoincPlugin = new CoreBoincPlugin(ui->boincTree, this);
+	//connect(ui->boincTree, SIGNAL(currentItemChanged(QTreeWidgetItem *)), SLOT(changeCurrentPage(QTreeWidgetItem *)));
 }
 
 
@@ -36,9 +39,10 @@ MainWindow::~MainWindow()
 }
 
 
-BoincTree *MainWindow::boincTree() const
+void MainWindow::addSession(Session::IdType id)
 {
-	return ui->boincTree;
+	ui->boincTree->addSession(id);
+	m_coreBoincPlugin->registerSession(id);
 }
 
 
@@ -55,6 +59,21 @@ void MainWindow::on_actionAddClient_triggered()
 		}
 		Engine::getInstance().addSession(host, port, pass, directory);
 	}
+}
+
+
+void MainWindow::on_boincTree_currentItemChanged(QTreeWidgetItem *current)
+{
+	InfoWidget *widget = 0;
+	if (current != 0) {
+		widget = m_coreBoincPlugin->createInfoWidget(current);
+	}
+	setInfoWidget(widget);
+}
+
+
+void MainWindow::setInfoWidget(InfoWidget *widget)
+{
 }
 
 } /* end of namespace ui_AdvancedNS */

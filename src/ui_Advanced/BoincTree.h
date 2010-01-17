@@ -18,11 +18,10 @@
 #define BOINCTREE_H
 
 #include "Session.h"
+#include <QtCore/QList>
 #include <QtCore/QMap>
 #include <QtGui/QTreeWidgetItem>
 #include <QtGui/QWidget>
-
-class QTreeWidget;
 
 namespace ui_AdvancedNS {
 
@@ -32,24 +31,30 @@ class BoincTree: public QWidget
 {
 Q_OBJECT
 public:
-	BoincTree(QWidget *parent = 0);
-	~BoincTree();
-	void addSession(Session::IdType id);
-	void removeSession(Session::IdType id);
-
-private slots:
-	void changeSessionState(Session::State state, Session::IdType id);
-
-private:
 	enum ItemRole {
-		PlubinRole = QTreeWidgetItem::UserType,
-		TypeRole,
+		PluginRole = Qt::UserRole,
 		IdRole,
 		UserItemRole
 	};
 
+	BoincTree(QWidget *parent = 0);
+	~BoincTree();
+	void addSession(Session::IdType id);
+	void removeSession(Session::IdType id);
+	void addTreeItems(Session::IdType id, QList<QTreeWidgetItem *> items);
+	void removeTreeItems(Session::IdType id, QList<QTreeWidgetItem *> items);
+
+signals:
+	void currentItemChanged(QTreeWidgetItem *item);
+
+private slots:
+	void changeSessionState(Session::State state, Session::IdType id);
+	void changeTreeSelection(QTreeWidgetItem *current);
+
+private:
 	QTreeWidget *m_tree;
-	QMap<Session::IdType, QTreeWidgetItem *> m_sessions;
+	QMap<Session::IdType, QTreeWidgetItem *> m_sessionItems;
+
 }; /* -----  end of class BoincTree  ----- */
 
 } /* end of namespace ui_AdvancedNS */

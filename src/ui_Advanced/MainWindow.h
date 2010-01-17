@@ -18,6 +18,7 @@
 #define MAINWINDOW_H
 
 #include <QtGui/QMainWindow>
+#include "Session.h"
 
 namespace Ui {
 	class MainWindow;
@@ -26,6 +27,9 @@ namespace Ui {
 namespace ui_AdvancedNS {
 
 class BoincTree;
+class CoreBoincPlugin;
+class InfoWidget;
+using namespace InfoBoinc;
 
 class MainWindow: public QMainWindow
 {
@@ -34,15 +38,19 @@ public:
 	/* ====================  LIFECYCLE     ==================== */
 	MainWindow(QWidget *parent = 0);
 	~MainWindow();
-	BoincTree *boincTree() const;
+	void addSession(Session::IdType id);
 
 private slots:
 	void on_actionAddClient_triggered();
+	void on_boincTree_currentItemChanged(QTreeWidgetItem *current);
 
 private:
 	Ui::MainWindow *ui;
 
+	void setInfoWidget(InfoWidget *widget);
+
 	/* ====================  DATA MEMBERS  ==================== */
+	CoreBoincPlugin *m_coreBoincPlugin;
 }; /* -----  end of class MainWindow  ----- */
 
 } /* end of namespace ui_AdvancedNS */

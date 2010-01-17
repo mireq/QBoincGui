@@ -37,6 +37,6 @@ ui_Advanced::~ui_Advanced()
 
 void ui_Advanced::addSession(InfoBoinc::Session::IdType id)
 {
-	m_mainWindow->boincTree()->addSession(id);
+	m_mainWindow->addSession(id);
 }
 

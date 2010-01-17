@@ -35,6 +35,8 @@ BoincTree::BoincTree(QWidget *parent):
 	m_tree->setSortingEnabled(true);
 	m_tree->setAlternatingRowColors(true);
 	m_tree->setIconSize(QSize(32, 32));
+
+	connect(m_tree, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), SLOT(changeTreeSelection(QTreeWidgetItem *)));
 }
 
 
@@ -47,10 +49,12 @@ void BoincTree::addSession(Session::IdType id)
 {
 	Session *session = Engine::getInstance().session(id);
 	QTreeWidgetItem *item = new QTreeWidgetItem;
+	item->setData(0, IdRole, id);
 	item->setData(0, UserItemRole, QString("%1:%2").arg(session->host()).arg(session->port()));
 	item->setData(0, Qt::DisplayRole, item->data(0, UserItemRole));
 	m_tree->addTopLevelItem(item);
-	m_sessions[id] = item;
+	m_tree->setItemExpanded(item, true);
+	m_sessionItems[id] = item;
 	changeSessionState(session->state(), session->id());
 	connect(session, SIGNAL(stateChanged(Session::State, Session::IdType)), SLOT(changeSessionState(Session::State, Session::IdType)));
 }
@@ -58,16 +62,33 @@ void BoincTree::addSession(Session::IdType id)
 
 void BoincTree::removeSession(Session::IdType id)
 {
-	QTreeWidgetItem *item = m_sessions[id];
+	QTreeWidgetItem *item = m_sessionItems[id];
 	m_tree->removeItemWidget(item, 0);
-	m_sessions.remove(id);
+	m_sessionItems.remove(id);
 	delete item;
+}
+
+
+void BoincTree::addTreeItems(Session::IdType id, QList<QTreeWidgetItem *> items)
+{
+	m_sessionItems[id]->addChildren(items);
+}
+
+
+void BoincTree::removeTreeItems(Session::IdType id, QList<QTreeWidgetItem *> items)
+{
+	QTreeWidgetItem *sessionItem = m_sessionItems[id];
+	m_tree->setUpdatesEnabled(false);
+	foreach (QTreeWidgetItem *item, items) {
+		sessionItem->removeChild(item);
+	}
+	m_tree->setUpdatesEnabled(true);
 }
 
 
 void BoincTree::changeSessionState(Session::State state, Session::IdType id)
 {
-	QTreeWidgetItem *item = m_sessions[id];
+	QTreeWidgetItem *item = m_sessionItems[id];
 	QString stateString;
 	switch (state) {
 		case Session::UnconnectedState:
@@ -89,6 +110,12 @@ void BoincTree::changeSessionState(Session::State state, Session::IdType id)
 	}
 
 	item->setData(0, Qt::DisplayRole, item->data(0, UserItemRole).toString() + " (" + stateString + ")");
+}
+
+
+void BoincTree::changeTreeSelection(QTreeWidgetItem *current)
+{
+	emit currentItemChanged(current);
 }
 
 } /* end of namespace ui_AdvancedNS */

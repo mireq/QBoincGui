@@ -195,6 +195,53 @@ void Session::startAuthorisation()
 }
 
 
+void Session::processProjectNodes(const QList<QDomElement> &projects)
+{
+	QSet<QString> projectsSet = QSet<QString>::fromList(m_projects.keys());
+	QList<QString> added;
+	QList<QString> removed;
+	QList<QString> changed;
+
+	// Zistenie zmien v projektoch a ich aktualizácia
+	foreach(const QDomElement &projectElement, projects) {
+		const ProjectInfo project(projectElement);
+		const QString projectId = project.primaryKey();
+
+		QSet<QString>::iterator projectIterator = projectsSet.find(project.primaryKey());
+
+		// Projekt ešte nie je v zozname projektov
+		if (projectIterator == projectsSet.end()) {
+			m_projects.insert(projectId, project);
+			createProjectData(projectId);
+			added.append(projectId);
+		}
+		else {
+			if (project != this->project(projectId)) {
+				m_projects.insert(projectId, project);
+				changed.append(projectId);
+			}
+			projectsSet.erase(projectIterator);
+		}
+	}
+
+	foreach(const QString &projectId, projectsSet) {
+		m_projects.remove(projectId);
+		removeProjectData(projectId);
+		removed.append(projectId);
+	}
+
+	if (!added.isEmpty()) {
+		emit projectsAdded(added, m_id);
+	}
+	if (!removed.isEmpty()) {
+		emit projectsRemoved(removed, m_id);
+	}
+	if (!changed.isEmpty()) {
+		emit projectsChanged(changed, m_id);
+	}
+}
+
+
 void Session::createProjectData(const QString & /*projectId*/)
 {
 }
@@ -249,41 +296,14 @@ void Session::processProjectStatus(const QByteArray &data)
 		return;
 	}
 
-	// Aktuálny zoznam projektov
-	QSet<QString> projectsSet = QSet<QString>::fromList(m_projects.keys());
-
-	// Zistenie zmien v projektoch a ich aktualizácia
+	QList<QDomElement> nodes;
 	for (int i = 0; i < reply.childNodes().count(); ++i) {
 		QDomNode projectNode = reply.childNodes().at(i);
-		if (!projectNode.isElement()) {
-			continue;
-		}
-
-		const ProjectInfo project(projectNode.toElement());
-		const QString projectId = project.primaryKey();
-
-		QSet<QString>::iterator projectIterator = projectsSet.find(project.primaryKey());
-
-		// Projekt ešte nie je v zozname projektov
-		if (projectIterator == projectsSet.end()) {
-			m_projects.insert(projectId, project);
-			createProjectData(projectId);
-			emit projectAdded(projectId, m_id);
-		}
-		else {
-			if (project != this->project(projectId)) {
-				m_projects.insert(projectId, project);
-				emit projectChanged(projectId, m_id);
-			}
-			projectsSet.erase(projectIterator);
+		if (projectNode.isElement()) {
+			nodes.append(projectNode.toElement());
 		}
 	}
-
-	foreach(const QString &projectId, projectsSet) {
-		m_projects.remove(projectId);
-		emit projectRemoved(projectId, m_id);
-		removeProjectData(projectId);
-	}
+	processProjectNodes(nodes);
 }
 
 #ifndef QT_NO_DEBUG_STREAM

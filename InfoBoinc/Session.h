@@ -139,9 +139,9 @@ signals:
 	 */
 	void stateChanged(Session::State state, Session::IdType id);
 
-	void projectAdded(const QString &projectId, Session::IdType id);
-	void projectRemoved(const QString &projectId, Session::IdType id);
-	void projectChanged(const QString &projectId, Session::IdType id);
+	void projectsAdded(const QList<QString> &projectId, Session::IdType id);
+	void projectsRemoved(const QList<QString> &projectId, Session::IdType id);
+	void projectsChanged(const QList<QString> &projectId, Session::IdType id);
 
 private slots:
 	void processData(const QByteArray &data);
@@ -160,6 +160,7 @@ private:
 	void sendCommand(const QByteArray &command, TProcessDataCallback callback);
 	void startAuthorisation();
 
+	void processProjectNodes(const QList<QDomElement> &projects);
 	void createProjectData(const QString &projectId);
 	void removeProjectData(const QString &projectId);
 
