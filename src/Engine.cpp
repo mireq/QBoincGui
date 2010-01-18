@@ -32,14 +32,6 @@ Engine::Engine():
 
 Engine::~Engine()
 {
-	if (m_uiMaster != 0) {
-		m_uiMaster->deleteLater();
-		m_uiMaster = 0;
-	}
-
-	foreach (Session *session, m_sessions) {
-		session->deleteLater();
-	}
 }
 
 
@@ -64,6 +56,20 @@ int Engine::initialize()
 }
 
 
+void Engine::deinitialize()
+{
+	if (m_uiMaster != 0) {
+		delete m_uiMaster;
+		m_uiMaster = 0;
+	}
+
+	foreach (Session *session, m_sessions) {
+		session->disconnect();
+		delete session;
+	}
+}
+
+
 Session::IdType Engine::addSession(const QString &host, quint16 port, const QString &password, const QString &directory)
 {
 	Session *session = new Session;
@@ -75,7 +81,7 @@ Session::IdType Engine::addSession(const QString &host, quint16 port, const QStr
 }
 
 
-InfoBoinc::Session *Engine::session(Session::IdType id)
+InfoBoinc::Session *Engine::session(InfoBoinc::Session::IdType id)
 {
 	return m_sessions[id];
 }

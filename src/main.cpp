@@ -19,6 +19,7 @@
 #include "debug.h"
 #include "src/Engine.h"
 
+#include "src/ui_Advanced/ui_Advanced.h"
 extern "C"
 int main(int argc, char *argv[])
 {
@@ -28,6 +29,8 @@ int main(int argc, char *argv[])
 	if (ret != 0) {
 		return ret;
 	}
-	return app.exec();
+	int qAppRet = app.exec();
+	Engine::getInstance().deinitialize();
+	return qAppRet;
 }
 

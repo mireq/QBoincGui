@@ -35,6 +35,7 @@ public:
 	static Engine &getInstance();
 	void initializeUi();
 	int initialize();
+	void deinitialize();
 	InfoBoinc::Session::IdType addSession(const QString &host, quint16 port, const QString &password, const QString &directory = QString());
 	InfoBoinc::Session *session(InfoBoinc::Session::IdType id);
 
