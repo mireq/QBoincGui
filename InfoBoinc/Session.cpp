@@ -36,7 +36,9 @@ Session::Session(QObject *parent):
 Session::~Session()
 {
 	if (m_socket != 0) {
-		m_socket->deleteLater();
+		m_socket->disconnectFromBoinc();
+		m_socket->wait(DisconnectWait);
+		delete m_socket;
 		m_socket = 0;
 	}
 }
@@ -69,6 +71,18 @@ quint16 Session::port() const
 const QString &Session::password() const
 {
 	return m_password;
+}
+
+
+const QString &Session::directory() const
+{
+	return m_directory;
+}
+
+
+bool Session::isLocal() const
+{
+	return !(m_directory.isNull());
 }
 
 

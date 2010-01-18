@@ -14,9 +14,11 @@
  * =====================================================================
  */
 
+#include <QtGui/QTextDocument>
 #include "AddClientWizard.h"
 #include "CoreBoincPlugin.h"
 #include "Engine.h"
+#include "InfoWidget.h"
 #include "Session.h"
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
@@ -29,7 +31,13 @@ MainWindow::MainWindow(QWidget *parent):
 {
 	ui->setupUi(this);
 	m_coreBoincPlugin = new CoreBoincPlugin(ui->boincTree, this);
-	//connect(ui->boincTree, SIGNAL(currentItemChanged(QTreeWidgetItem *)), SLOT(changeCurrentPage(QTreeWidgetItem *)));
+	m_currentInfoWidget = 0;
+
+	// Nastavenie veľkého titulku
+	QFont font = ui->pageTitleLabel->font();
+	font.setPointSize(font.pointSize() * 2);
+	font.setWeight(QFont::Bold);
+	ui->pageTitleLabel->setFont(font);
 }
 
 
@@ -55,7 +63,7 @@ void MainWindow::on_actionAddClient_triggered()
 		QString pass = wizard.field("password").toString();
 		QString directory;
 		if (wizard.field("isLocal").toBool()) {
-			QString directory = wizard.field("directory").toString();
+			directory = wizard.field("directory").toString();
 		}
 		Engine::getInstance().addSession(host, port, pass, directory);
 	}
@@ -74,6 +82,27 @@ void MainWindow::on_boincTree_currentItemChanged(QTreeWidgetItem *current)
 
 void MainWindow::setInfoWidget(InfoWidget *widget)
 {
+	QWidget *old = ui->stackedWidget->currentWidget();
+	if (widget != 0) {
+		ui->stackedWidget->insertWidget(0, widget);
+		ui->stackedWidget->setCurrentIndex(0);
+		ui->pageTitleLabel->setText(widget->widgetTitle());
+		QSize pixmapSize = widget->widgetIcon().actualSize(QSize(64, 64));
+		if (pixmapSize.isValid()) {
+			ui->pageIconLabel->setPixmap(widget->widgetIcon().pixmap(pixmapSize));
+		}
+		else {
+			ui->pageIconLabel->setPixmap(QPixmap());
+		}
+	}
+	else {
+		ui->pageTitleLabel->setText("");
+		ui->pageIconLabel->setPixmap(QPixmap());
+	}
+	if (old != 0) {
+		ui->stackedWidget->removeWidget(old);
+		old->deleteLater();
+	}
 }
 
 } /* end of namespace ui_AdvancedNS */

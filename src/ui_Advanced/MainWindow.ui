@@ -7,35 +7,59 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>400</height>
+    <width>701</width>
+    <height>435</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Boinc gui</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout">
+   <layout class="QGridLayout" name="gridLayout_3">
     <item row="0" column="0">
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="ui_AdvancedNS::BoincTree" name="boincTree" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-      <widget class="QStackedWidget" name="stackedWidget">
+      <widget class="ui_AdvancedNS::BoincTree" name="boincTree" native="true"/>
+      <widget class="QWidget" name="widget_2" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
          <horstretch>1</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="pageIconLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::PlainText</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="ElidedTextLabel" name="pageTitleLabel">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::PlainText</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="2">
+         <widget class="QStackedWidget" name="stackedWidget"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -46,7 +70,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>640</width>
+     <width>701</width>
      <height>15</height>
     </rect>
    </property>
@@ -99,6 +123,11 @@
    <extends>QWidget</extends>
    <header>ui_Advanced/BoincTree.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ElidedTextLabel</class>
+   <extends>QLabel</extends>
+   <header>ElidedTextLabel.h</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -20,6 +20,8 @@
 #include <QtGui/QMainWindow>
 #include "Session.h"
 
+class QTreeWidgetItem;
+
 namespace Ui {
 	class MainWindow;
 }
@@ -51,6 +53,7 @@ private:
 
 	/* ====================  DATA MEMBERS  ==================== */
 	CoreBoincPlugin *m_coreBoincPlugin;
+	InfoWidget *m_currentInfoWidget;
 }; /* -----  end of class MainWindow  ----- */
 
 } /* end of namespace ui_AdvancedNS */

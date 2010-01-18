@@ -27,5 +27,15 @@ InfoWidget::~InfoWidget()
 {
 }
 
+QString InfoWidget::widgetTitle() const
+{
+	return windowTitle();
+}
+
+QIcon InfoWidget::widgetIcon() const
+{
+	return windowIcon();
+}
+
 } /* end of namespace ui_AdvancedNS */
 

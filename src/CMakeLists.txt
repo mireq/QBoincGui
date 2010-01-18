@@ -6,8 +6,9 @@ include_directories(
 
 set(QBoincGui_SRCS
 	main.cpp
-	GuiIcon.cpp
+	ElidedTextLabel.cpp
 	Engine.cpp
+	GuiIcon.cpp
 	ui_Master.cpp
 	ui_Advanced/AddClientWizard.cpp
 	ui_Advanced/BoincTree.cpp
@@ -15,6 +16,7 @@ set(QBoincGui_SRCS
 	ui_Advanced/InfoWidget.cpp
 	ui_Advanced/MainWindow.cpp
 	ui_Advanced/ui_Advanced.cpp
+	ui_Advanced/InfoWidgets/SessionInfoWidget.cpp
 )
 
 set(QBoincGui_HDRS
@@ -22,6 +24,7 @@ set(QBoincGui_HDRS
 )
 
 set(QBoincGui_MOC_HDRS
+	ElidedTextLabel.h
 	Engine.h
 	ui_Master.h
 	ui_Advanced/AddClientWizard.h
@@ -31,10 +34,12 @@ set(QBoincGui_MOC_HDRS
 	ui_Advanced/BoincPlugin.h
 	ui_Advanced/MainWindow.h
 	ui_Advanced/ui_Advanced.h
+	ui_Advanced/InfoWidgets/SessionInfoWidget.h
 )
 
 set(QBoincGui_UIS
 	ui_Advanced/MainWindow.ui
+	ui_Advanced/InfoWidgets/SessionInfoWidget.ui
 )
 
 set(QBoincGui_QRC

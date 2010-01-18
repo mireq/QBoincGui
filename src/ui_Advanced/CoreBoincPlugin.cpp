@@ -14,7 +14,9 @@
  * =====================================================================
  */
 
+#include "Engine.h"
 #include "GuiIcon.h"
+#include "InfoWidgets/SessionInfoWidget.h"
 #include "CoreBoincPlugin.h"
 
 namespace ui_AdvancedNS {
@@ -43,13 +45,26 @@ void CoreBoincPlugin::registerSession(Session::IdType id)
 }
 
 
-void CoreBoincPlugin::unregisterSession(Session::IdType id)
+void CoreBoincPlugin::unregisterSession(Session::IdType /*id*/)
 {
 }
 
 
 InfoWidget *CoreBoincPlugin::createInfoWidget(QTreeWidgetItem *item)
 {
+	Session::IdType sessionId = 0;
+	QTreeWidgetItem *sessionItem = item;
+	while (sessionItem->parent() != 0) {
+		sessionItem = sessionItem->parent();
+	}
+	sessionId = sessionItem->data(0, BoincTree::IdRole).toUInt();
+
+	Session *session = Engine::getInstance().session(sessionId);
+	switch (item->type()) {
+		case HostType: break;
+		default:
+			return new SessionInfoWidget(session);
+	}
 	return 0;
 }
 

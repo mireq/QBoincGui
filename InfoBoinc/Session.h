@@ -98,6 +98,16 @@ public:
 	const QString &password() const;
 
 	/**
+	 * Vráti adresár ak je klient lokálny.
+	 */
+	const QString &directory() const;
+
+	/**
+	 * Vráti \e true, ak je to spojenie na lokálneho klienta.
+	 */
+	bool isLocal() const;
+
+	/**
 	 * Nastavenie pracovného adresára na \a directory;
 	 */
 	void setDirectory(const QString &directory);

@@ -17,6 +17,7 @@
 #ifndef INFOWIDGET_H
 #define INFOWIDGET_H
 
+#include <QtGui/QIcon>
 #include <QtGui/QWidget>
 
 namespace ui_AdvancedNS {
@@ -27,6 +28,9 @@ Q_OBJECT
 public:
 	InfoWidget(QWidget *parent = 0);
 	~InfoWidget();
+
+	virtual QString widgetTitle() const;
+	virtual QIcon widgetIcon() const;
 }; /* -----  end of class InfoWidget  ----- */
 
 } /* end of namespace ui_AdvancedNS */
