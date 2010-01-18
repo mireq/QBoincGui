@@ -38,6 +38,7 @@ public:
 		StringAttribute,   /**< Textový atribút.            */
 		BoolAttribute,     /**< Hodnoty \e true / \e false. */
 		IntAttribute,      /**< Celé číslo.                 */
+		UIntAttribute,     /**< Celé nezáporné číslo.       */
 		DoubleAttribute,   /**< Desatinné číslo.            */
 		TimestampAttribute /**< Časová pečiatka.            */
 	};
@@ -76,12 +77,21 @@ public:
 	 */
 	friend bool operator!=(const XMLAttributeMap &lhs, const XMLAttributeMap &rhs);
 
+	/**
+	 * Výpis atribútov spracovanej časti XML dát.
+	 */
+	friend QDebug operator<<(QDebug dbg, const XMLAttributeMap &atrMap);
+
 private:
 	QMap<QString, QVariant> m_attributes;
 }; /* -----  end of class XMLAttributeMap  ----- */
 
 bool operator==(const XMLAttributeMap &lhs, const XMLAttributeMap &rhs);
 bool operator!=(const XMLAttributeMap &lhs, const XMLAttributeMap &rhs);
+
+#ifndef QT_NO_DEBUG_STREAM
+QDebug operator<<(QDebug dbg, const XMLAttributeMap &atrMap);
+#endif
 
 } /* end of namespace InfoBoinc */
 

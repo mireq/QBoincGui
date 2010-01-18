@@ -57,6 +57,7 @@ void XMLAttributeMap::parseAttributes(const QDomElement &dom, const QMap<QString
 			switch (type) {
 				case BoolAttribute:      value = QVariant(value.toBool());   break;
 				case IntAttribute:       value = QVariant(value.toInt());    break;
+				case UIntAttribute:      value = QVariant(value.toUInt());   break;
 				case DoubleAttribute:    value = QVariant(value.toDouble()); break;
 				case TimestampAttribute: value = QVariant(QDateTime::fromTime_t(uint(value.toDouble())));
 				default: break;
@@ -74,6 +75,16 @@ bool operator==(const XMLAttributeMap &lhs, const XMLAttributeMap &rhs)
 bool operator!=(const XMLAttributeMap &lhs, const XMLAttributeMap &rhs)
 {
 	return lhs.m_attributes != rhs.m_attributes;
+}
+
+QDebug operator<<(QDebug dbg, const XMLAttributeMap &atrMap)
+{
+	dbg.nospace();
+	QMap<QString, QVariant>::const_iterator atrIterator;
+	for (atrIterator = atrMap.m_attributes.begin(); atrIterator != atrMap.m_attributes.end(); ++atrIterator) {
+		dbg << atrIterator.key() << ":" << atrIterator.value().toString() << "\n";
+	}
+	return dbg.space();
 }
 
 } /* end of namespace InfoBoinc */
