@@ -86,12 +86,32 @@ bool Session::isLocal() const
 }
 
 
+const ProjectInfo &Session::project(const QString &projectId) const
+{
+	QMap<QString, ProjectInfo>::const_iterator info = m_projects.find(projectId);
+	return info.value();
+}
+
+
+const HostInfo &Session::hostInfo() const
+{
+	return m_hostInfo;
+}
+
+
+const ClientInfo &Session::clientInfo() const
+{
+	return m_clientInfo;
+}
+
+
 void Session::setState(State state)
 {
 	if (state != m_state) {
+		qDebug() << debugMsgInfo(this) << state;
+		m_state = state;
+		emit stateChanged(state, m_id);
 	}
-	m_state = state;
-	emit stateChanged(state, m_id);
 }
 
 
@@ -133,10 +153,21 @@ void Session::requestProjectStatus()
 }
 
 
-const ProjectInfo &Session::project(const QString &projectId) const
+void Session::requestHostInfo()
 {
-	QMap<QString, ProjectInfo>::const_iterator info = m_projects.find(projectId);
-	return info.value();
+	sendCommand("<boinc_gui_rpc_request><get_host_info /></boinc_gui_rpc_request>", &Session::processHostInfo);
+}
+
+
+void Session::requestState()
+{
+	sendCommand("<boinc_gui_rpc_request><get_state /></boinc_gui_rpc_request>", &Session::processState);
+}
+
+
+void Session::requestClientInfo()
+{
+	requestState();
 }
 
 
@@ -199,7 +230,12 @@ QDomElement Session::getReply(const QByteArray &data)
 void Session::sendCommand(const QByteArray &command, TProcessDataCallback callback)
 {
 	m_processDataCallbacks.append(callback);
-	m_socket->sendData(command);
+	if (m_socket != 0) {
+		m_socket->sendData(command);
+	}
+	else {
+		processData(QByteArray());
+	}
 }
 
 
@@ -256,6 +292,16 @@ void Session::processProjectNodes(const QList<QDomElement> &projects)
 }
 
 
+void Session::processClientInfo(const QDomElement &element)
+{
+	ClientInfo info(element);
+	if (info != m_clientInfo) {
+		m_clientInfo = info;
+		emit clientInfoChanged(m_clientInfo, m_id);
+	}
+}
+
+
 void Session::createProjectData(const QString & /*projectId*/)
 {
 }
@@ -297,6 +343,7 @@ void Session::processAuth2(const QByteArray &data)
 	else {
 		qDebug() << debugMsgInfo(this) << "Authorisation Failed";
 		closeSession();
+		setState(UnconnectedState);
 		emit error(UnauthorizedError);
 	}
 }
@@ -319,6 +366,35 @@ void Session::processProjectStatus(const QByteArray &data)
 	}
 	processProjectNodes(nodes);
 }
+
+
+void Session::processHostInfo(const QByteArray &data)
+{
+	QDomNode reply = getReply(data);
+	if (reply.nodeName() != "host_info") {
+		triggerXmlError(reply);
+		return;
+	}
+
+	HostInfo info(reply.toElement());
+	if (info != m_hostInfo) {
+		m_hostInfo = info;
+		emit hostInfoChanged(m_hostInfo, m_id);
+	}
+}
+
+
+void Session::processState(const QByteArray &data)
+{
+	QDomNode reply = getReply(data);
+	if (reply.nodeName() != "client_state") {
+		triggerXmlError(reply);
+		return;
+	}
+
+	processClientInfo(reply.toElement());
+}
+
 
 #ifndef QT_NO_DEBUG_STREAM
 QDebug operator<<(QDebug dbg, Session::State state)

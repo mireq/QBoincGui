@@ -38,9 +38,15 @@ public:
 	CoreBoincPlugin(BoincTree *boincTree, QObject *parent = 0);
 	~CoreBoincPlugin();
 
-	virtual void registerSession(Session::IdType id);
-	virtual void unregisterSession(Session::IdType id);
+	virtual void registerSession(InfoBoinc::Session::IdType id);
+	virtual void unregisterSession(InfoBoinc::Session::IdType id);
 	virtual InfoWidget *createInfoWidget(QTreeWidgetItem *item);
+
+private slots:
+	void updateSessionState(InfoBoinc::Session::State state, InfoBoinc::Session::IdType sessionId);
+
+private:
+	QMap<InfoBoinc::Session::IdType, QList<QTreeWidgetItem *> > m_treeItems;
 }; /* -----  end of class CoreBoincPlugin  ----- */
 
 } /* end of namespace ui_AdvancedNS */

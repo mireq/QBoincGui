@@ -25,8 +25,6 @@
 
 namespace ui_AdvancedNS {
 
-using namespace InfoBoinc;
-
 class BoincTree: public QWidget
 {
 Q_OBJECT
@@ -39,21 +37,21 @@ public:
 
 	BoincTree(QWidget *parent = 0);
 	~BoincTree();
-	void addSession(Session::IdType id);
-	void removeSession(Session::IdType id);
-	void addTreeItems(Session::IdType id, QList<QTreeWidgetItem *> items);
-	void removeTreeItems(Session::IdType id, QList<QTreeWidgetItem *> items);
+	void addSession(InfoBoinc::Session::IdType id);
+	void removeSession(InfoBoinc::Session::IdType id);
+	void addTreeItems(InfoBoinc::Session::IdType id, QList<QTreeWidgetItem *> items);
+	void removeTreeItems(InfoBoinc::Session::IdType id, QList<QTreeWidgetItem *> items);
 
 signals:
 	void currentItemChanged(QTreeWidgetItem *item);
 
 private slots:
-	void changeSessionState(Session::State state, Session::IdType id);
+	void changeSessionState(InfoBoinc::Session::State state, InfoBoinc::Session::IdType id);
 	void changeTreeSelection(QTreeWidgetItem *current);
 
 private:
 	QTreeWidget *m_tree;
-	QMap<Session::IdType, QTreeWidgetItem *> m_sessionItems;
+	QMap<InfoBoinc::Session::IdType, QTreeWidgetItem *> m_sessionItems;
 
 }; /* -----  end of class BoincTree  ----- */
 

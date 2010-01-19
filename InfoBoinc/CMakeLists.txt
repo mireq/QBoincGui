@@ -8,11 +8,15 @@ set(InfoBoinc_SRCS
 	Session.cpp
 	Socket.cpp
 	XMLAttributeMap.cpp
+	model/ClientInfo.cpp
+	model/HostInfo.cpp
 	model/ProjectInfo.cpp
 )
 
 set(InfoBoinc_HDRS
 	XMLAttributeMap.h
+	model/ClientInfo.h
+	model/HostInfo.h
 	model/ProjectInfo.h
 )
 

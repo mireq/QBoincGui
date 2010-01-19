@@ -20,6 +20,8 @@
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtXml/QDomNode>
+#include "model/ClientInfo.h"
+#include "model/HostInfo.h"
 #include "model/ProjectInfo.h"
 #include "Socket.h"
 
@@ -80,7 +82,7 @@ public:
 	 * Vráti aktuálny stav spojenia s BOINC-om.
 	 * \sa stateChanged()
 	 */
-	Session::State state() const;
+	InfoBoinc::Session::State state() const;
 
 	/**
 	 * Vráti host, s ktorým spája.
@@ -106,6 +108,12 @@ public:
 	 * Vráti \e true, ak je to spojenie na lokálneho klienta.
 	 */
 	bool isLocal() const;
+
+	const ProjectInfo &project(const QString &projectId) const;
+
+	const HostInfo &hostInfo() const;
+
+	const ClientInfo &clientInfo() const;
 
 	/**
 	 * Nastavenie pracovného adresára na \a directory;
@@ -134,24 +142,36 @@ public slots:
 	 */
 	void requestProjectStatus();
 
-	const ProjectInfo &project(const QString &projectId) const;
+	/**
+	 * Vyžiadanie informácií o hostiteľovi.
+	 */
+	void requestHostInfo();
+
+	/**
+	 * Požiadavka na zistenie komplexného stavu.
+	 */
+	void requestState();
+	void requestClientInfo();
 
 signals:
 	/**
 	 * Signál sa emituje v dôsledku chyby spôsobenej pri komunikácii s klientom,
 	 * alebo chyby socketu.
 	 */
-	void error(Session::ErrorType code, const QString &message = QString());
+	void error(InfoBoinc::Session::ErrorType code, const QString &message = QString());
 
 	/**
 	 * Signál sa emituje pri zmene stavu spojenia.
 	 * \sa state()
 	 */
-	void stateChanged(Session::State state, Session::IdType id);
+	void stateChanged(InfoBoinc::Session::State state, InfoBoinc::Session::IdType id);
 
-	void projectsAdded(const QList<QString> &projectId, Session::IdType id);
-	void projectsRemoved(const QList<QString> &projectId, Session::IdType id);
-	void projectsChanged(const QList<QString> &projectId, Session::IdType id);
+	void projectsAdded(const QList<QString> &projectId, InfoBoinc::Session::IdType id);
+	void projectsRemoved(const QList<QString> &projectId, InfoBoinc::Session::IdType id);
+	void projectsChanged(const QList<QString> &projectId, InfoBoinc::Session::IdType id);
+
+	void hostInfoChanged(const InfoBoinc::HostInfo &hostInfo, InfoBoinc::Session::IdType id);
+	void clientInfoChanged(const InfoBoinc::ClientInfo &clientInfo, InfoBoinc::Session::IdType id);
 
 private slots:
 	void processData(const QByteArray &data);
@@ -162,7 +182,7 @@ private:
 
 	static const unsigned long DisconnectWait = 2000;
 
-	typedef void (Session::*TProcessDataCallback)(const QByteArray &data);
+	typedef void (InfoBoinc::Session::*TProcessDataCallback)(const QByteArray &data);
 
 	void setState(State state);
 	void triggerXmlError(const QDomNode &reply = QDomNode());
@@ -171,6 +191,7 @@ private:
 	void startAuthorisation();
 
 	void processProjectNodes(const QList<QDomElement> &projects);
+	void processClientInfo(const QDomElement &element);
 	void createProjectData(const QString &projectId);
 	void removeProjectData(const QString &projectId);
 
@@ -178,6 +199,8 @@ private:
 	void processAuth1(const QByteArray &data);
 	void processAuth2(const QByteArray &data);
 	void processProjectStatus(const QByteArray &data);
+	void processHostInfo(const QByteArray &data);
+	void processState(const QByteArray &data);
 
 	/* ====================  STATIC        ==================== */
 	static quint32 m_nextId;
@@ -195,10 +218,12 @@ private:
 
 	/* ====================  MODEL DATA    ==================== */
 	QMap<QString, ProjectInfo> m_projects;
+	HostInfo m_hostInfo;
+	ClientInfo m_clientInfo;
 }; /* -----  end of class Session  ----- */
 
 #ifndef QT_NO_DEBUG_STREAM
-QDebug operator<<(QDebug dbg, Session::State state);
+QDebug operator<<(QDebug dbg, InfoBoinc::Session::State state);
 #endif
 
 } /* end of namespace InfoBoinc */

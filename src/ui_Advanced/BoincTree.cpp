@@ -20,7 +20,6 @@
 #include "GuiIcon.h"
 #include "BoincTree.h"
 
-using namespace InfoBoinc;
 namespace ui_AdvancedNS {
 
 BoincTree::BoincTree(QWidget *parent):
@@ -45,9 +44,9 @@ BoincTree::~BoincTree()
 }
 
 
-void BoincTree::addSession(Session::IdType id)
+void BoincTree::addSession(InfoBoinc::Session::IdType id)
 {
-	Session *session = Engine::getInstance().session(id);
+	InfoBoinc::Session *session = Engine::getInstance().session(id);
 	QTreeWidgetItem *item = new QTreeWidgetItem;
 	item->setData(0, IdRole, id);
 	item->setData(0, UserItemRole, QString("%1:%2").arg(session->host()).arg(session->port()));
@@ -56,11 +55,11 @@ void BoincTree::addSession(Session::IdType id)
 	m_tree->setItemExpanded(item, true);
 	m_sessionItems[id] = item;
 	changeSessionState(session->state(), session->id());
-	connect(session, SIGNAL(stateChanged(Session::State, Session::IdType)), SLOT(changeSessionState(Session::State, Session::IdType)));
+	connect(session, SIGNAL(stateChanged(InfoBoinc::Session::State, InfoBoinc::Session::IdType)), SLOT(changeSessionState(InfoBoinc::Session::State, InfoBoinc::Session::IdType)));
 }
 
 
-void BoincTree::removeSession(Session::IdType id)
+void BoincTree::removeSession(InfoBoinc::Session::IdType id)
 {
 	QTreeWidgetItem *item = m_sessionItems[id];
 	m_tree->removeItemWidget(item, 0);
@@ -69,13 +68,13 @@ void BoincTree::removeSession(Session::IdType id)
 }
 
 
-void BoincTree::addTreeItems(Session::IdType id, QList<QTreeWidgetItem *> items)
+void BoincTree::addTreeItems(InfoBoinc::Session::IdType id, QList<QTreeWidgetItem *> items)
 {
 	m_sessionItems[id]->addChildren(items);
 }
 
 
-void BoincTree::removeTreeItems(Session::IdType id, QList<QTreeWidgetItem *> items)
+void BoincTree::removeTreeItems(InfoBoinc::Session::IdType id, QList<QTreeWidgetItem *> items)
 {
 	QTreeWidgetItem *sessionItem = m_sessionItems[id];
 	m_tree->setUpdatesEnabled(false);
@@ -86,24 +85,24 @@ void BoincTree::removeTreeItems(Session::IdType id, QList<QTreeWidgetItem *> ite
 }
 
 
-void BoincTree::changeSessionState(Session::State state, Session::IdType id)
+void BoincTree::changeSessionState(InfoBoinc::Session::State state, InfoBoinc::Session::IdType id)
 {
 	QTreeWidgetItem *item = m_sessionItems[id];
 	QString stateString;
 	switch (state) {
-		case Session::UnconnectedState:
+		case InfoBoinc::Session::UnconnectedState:
 			item->setIcon(0, GuiIcon("connect_no", "tree"));
 			stateString = tr("Unconnected");
 			break;
-		case Session::DisconnectingState:
+		case InfoBoinc::Session::DisconnectingState:
 			item->setIcon(0, GuiIcon("connect_no", "tree"));
 			stateString = tr("Disconnecting");
 			break;
-		case Session::ConnectingState:
+		case InfoBoinc::Session::ConnectingState:
 			item->setIcon(0, GuiIcon("connect_creating", "tree"));
 			stateString = tr("Connecting");
 			break;
-		case Session::ConnectedState:
+		case InfoBoinc::Session::ConnectedState:
 			item->setIcon(0, GuiIcon("connect_established", "tree"));
 			stateString = tr("Connected");
 			break;

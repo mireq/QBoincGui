@@ -18,13 +18,13 @@
 #define PROJECTINFO_H
 
 #include <QtCore/QDateTime>
-#include <QtCore/QMap>
 #include <QtCore/QString>
 #include "debug.h"
 #include "XMLAttributeMap.h"
 class QDomElement;
 
 namespace InfoBoinc {
+
 /**
  * \class ProjectInfo
  */
@@ -54,7 +54,7 @@ public:
 	friend bool operator!=(const ProjectInfo &lhs, const ProjectInfo &rhs);
 
 private:
-	static QMap<QString, XMLAttributeMap::AttributeType> m_attributeTypes;
+	static QMap<QString, int> m_attributeTypes;
 	XMLAttributeMap m_attributes;
 	/* ====================  DATA MEMBERS  ==================== */
 }; /* -----  end of class ProjectInfo  ----- */
@@ -63,7 +63,7 @@ bool operator==(const ProjectInfo &lhs, const ProjectInfo &rhs);
 bool operator!=(const ProjectInfo &lhs, const ProjectInfo &rhs);
 
 #ifndef QT_NO_DEBUG_STREAM
-QDebug operator<<(QDebug dbg, ProjectInfo info);
+QDebug operator<<(QDebug dbg, const ProjectInfo &info);
 #endif
 
 } /* end of namespace InfoBoinc */

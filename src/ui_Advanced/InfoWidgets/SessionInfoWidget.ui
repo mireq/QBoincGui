@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../../resources.qrc">
-    <normaloff>:/icons/64x64/sections/computer.png</normaloff>:/icons/64x64/sections/computer.png</iconset>
+    <normaloff>:/icons/64x64/sections/session.png</normaloff>:/icons/64x64/sections/session.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -173,20 +173,20 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="platformCaption">
+      <item row="1" column="1">
+       <widget class="QLabel" name="domainNameLabel">
         <property name="text">
-         <string>Platform:</string>
+         <string/>
         </property>
         <property name="textFormat">
          <enum>Qt::PlainText</enum>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
-       <widget class="QLabel" name="platformLabel">
+      <item row="1" column="0">
+       <widget class="QLabel" name="domainNameCaption">
         <property name="text">
-         <string/>
+         <string>Domain name:</string>
         </property>
         <property name="textFormat">
          <enum>Qt::PlainText</enum>
@@ -203,6 +203,16 @@
         </property>
        </widget>
       </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="platformCaption">
+        <property name="text">
+         <string>Platform:</string>
+        </property>
+        <property name="textFormat">
+         <enum>Qt::PlainText</enum>
+        </property>
+       </widget>
+      </item>
       <item row="5" column="1">
        <widget class="QLabel" name="clientVersionLabel">
         <property name="text">
@@ -213,20 +223,10 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="hostNameLabel">
+      <item row="4" column="1">
+       <widget class="QLabel" name="platformLabel">
         <property name="text">
          <string/>
-        </property>
-        <property name="textFormat">
-         <enum>Qt::PlainText</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="hostNameCaption">
-        <property name="text">
-         <string>Host name:</string>
         </property>
         <property name="textFormat">
          <enum>Qt::PlainText</enum>

@@ -47,7 +47,7 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::addSession(Session::IdType id)
+void MainWindow::addSession(InfoBoinc::Session::IdType id)
 {
 	ui->boincTree->addSession(id);
 	m_coreBoincPlugin->registerSession(id);

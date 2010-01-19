@@ -73,6 +73,7 @@ void Engine::deinitialize()
 Session::IdType Engine::addSession(const QString &host, quint16 port, const QString &password, const QString &directory)
 {
 	Session *session = new Session;
+	connect(session, SIGNAL(stateChanged(InfoBoinc::Session::State, InfoBoinc::Session::IdType)), SLOT(onSessionStateChanged(InfoBoinc::Session::State, InfoBoinc::Session::IdType)));
 	m_sessions[session->id()] = session;
 	session->setDirectory(directory);
 	session->openSession(host, port, password);
@@ -84,6 +85,15 @@ Session::IdType Engine::addSession(const QString &host, quint16 port, const QStr
 InfoBoinc::Session *Engine::session(InfoBoinc::Session::IdType id)
 {
 	return m_sessions[id];
+}
+
+
+void Engine::onSessionStateChanged(InfoBoinc::Session::State state, InfoBoinc::Session::IdType id)
+{
+	Session *session = m_sessions[id];
+	if (state == InfoBoinc::Session::ConnectedState) {
+		session->requestState();
+	}
 }
 
 

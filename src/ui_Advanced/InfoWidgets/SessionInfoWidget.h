@@ -27,16 +27,21 @@ namespace Ui {
 
 namespace ui_AdvancedNS {
 
-using namespace InfoBoinc;
-
 class SessionInfoWidget: public InfoWidget
 {
 Q_OBJECT
 public:
-	SessionInfoWidget(Session *session, QWidget *parent = 0);
+	SessionInfoWidget(InfoBoinc::Session *session, QWidget *parent = 0);
 	~SessionInfoWidget();
+
+private slots:
+	void updateHostInfo(const InfoBoinc::HostInfo &hostInfo);
+	void updateClientInfo(const InfoBoinc::ClientInfo &clientInfo);
+	void updateSessionState(InfoBoinc::Session::State state);
+
 private:
 	Ui::SessionInfoWidget *ui;
+	InfoBoinc::Session *m_sessionPtr;
 }; /* -----  end of class SessionInfoWidget  ----- */
 
 } /* end of namespace ui_AdvancedNS */

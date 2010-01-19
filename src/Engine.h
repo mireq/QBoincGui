@@ -42,6 +42,9 @@ public:
 signals:
 	void sessionAdded(InfoBoinc::Session::IdType id);
 
+private slots:
+	void onSessionStateChanged(InfoBoinc::Session::State state, InfoBoinc::Session::IdType id);
+
 private:
 	virtual void timerEvent(QTimerEvent *event);
 

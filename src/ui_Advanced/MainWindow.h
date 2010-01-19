@@ -31,7 +31,6 @@ namespace ui_AdvancedNS {
 class BoincTree;
 class CoreBoincPlugin;
 class InfoWidget;
-using namespace InfoBoinc;
 
 class MainWindow: public QMainWindow
 {
@@ -40,7 +39,7 @@ public:
 	/* ====================  LIFECYCLE     ==================== */
 	MainWindow(QWidget *parent = 0);
 	~MainWindow();
-	void addSession(Session::IdType id);
+	void addSession(InfoBoinc::Session::IdType id);
 
 private slots:
 	void on_actionAddClient_triggered();

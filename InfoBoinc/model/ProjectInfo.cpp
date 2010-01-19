@@ -20,7 +20,7 @@
 
 namespace InfoBoinc {
 
-QMap<QString, XMLAttributeMap::AttributeType> ProjectInfo::m_attributeTypes;
+QMap<QString, int> ProjectInfo::m_attributeTypes;
 
 ProjectInfo::ProjectInfo(const QDomElement &projectInfoNode)
 {
@@ -115,7 +115,7 @@ bool operator!=(const ProjectInfo &lhs, const ProjectInfo &rhs)
 }
 
 #ifndef QT_NO_DEBUG_STREAM
-QDebug operator<<(QDebug dbg, ProjectInfo info)
+QDebug operator<<(QDebug dbg, const ProjectInfo &info)
 {
 	dbg.nospace();
 	dbg << "Master URL: " << info.masterUrl() << "\n";

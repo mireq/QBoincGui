@@ -20,7 +20,6 @@
 #include "ui_Advanced.h"
 
 using namespace ui_AdvancedNS;
-using namespace InfoBoinc;
 
 ui_Advanced::ui_Advanced()
 {
