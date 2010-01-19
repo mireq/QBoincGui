@@ -15,18 +15,26 @@
  */
 
 #include <QtCore/QDateTime>
+#include <QtCore/QDebug>
 #include <QtXml/QDomNode>
 #include "XMLAttributeMap.h"
 
 namespace InfoBoinc {
 
-XMLAttributeMap::XMLAttributeMap()
+XMLAttributeMap::XMLAttributeMap():
+	m_isNull(true)
 {
 }
 
 
 XMLAttributeMap::~XMLAttributeMap()
 {
+}
+
+
+bool XMLAttributeMap::isNull() const
+{
+	return m_isNull;
 }
 
 
@@ -42,7 +50,7 @@ QVariant XMLAttributeMap::attribute(const QString &name) const
 }
 
 
-void XMLAttributeMap::parseAttributes(const QDomElement &dom, const QMap<QString,AttributeType> &attributes)
+void XMLAttributeMap::parseAttributes(const QDomElement &dom, const QMap<QString,int> &attributes)
 {
 	QDomNodeList nodes = dom.childNodes();
 	for (int i = 0; i < nodes.count(); ++i) {
@@ -50,9 +58,10 @@ void XMLAttributeMap::parseAttributes(const QDomElement &dom, const QMap<QString
 		if (!node.isElement()) {
 			continue;
 		}
-		QMap<QString,AttributeType>::const_iterator attrInfoIter = attributes.find(node.nodeName());
+		QMap<QString,int>::const_iterator attrInfoIter = attributes.find(node.nodeName());
 		if (attrInfoIter != attributes.end()) {
-			AttributeType type = attrInfoIter.value();
+			int flags = attrInfoIter.value();
+			int type = flags & (~ListAttribute);
 			QVariant value = node.toElement().text();
 			switch (type) {
 				case BoolAttribute:      value = QVariant(value.toBool());   break;
@@ -62,9 +71,22 @@ void XMLAttributeMap::parseAttributes(const QDomElement &dom, const QMap<QString
 				case TimestampAttribute: value = QVariant(QDateTime::fromTime_t(uint(value.toDouble())));
 				default: break;
 			}
-			m_attributes[attrInfoIter.key()] = value;
+
+			// Zoznam hodnôt
+			if (flags & ListAttribute) {
+				QList<QVariant> items;
+				if (m_attributes.contains(attrInfoIter.key())) {
+					items = m_attributes[attrInfoIter.key()].toList();
+				}
+				items.append(value);
+				m_attributes[attrInfoIter.key()] = items;
+			}
+			else {
+				m_attributes[attrInfoIter.key()] = value;
+			}
 		}
 	}
+	m_isNull = false;
 }
 
 bool operator==(const XMLAttributeMap &lhs, const XMLAttributeMap &rhs)
@@ -82,7 +104,16 @@ QDebug operator<<(QDebug dbg, const XMLAttributeMap &atrMap)
 	dbg.nospace();
 	QMap<QString, QVariant>::const_iterator atrIterator;
 	for (atrIterator = atrMap.m_attributes.begin(); atrIterator != atrMap.m_attributes.end(); ++atrIterator) {
-		dbg << atrIterator.key() << ":" << atrIterator.value().toString() << "\n";
+		if (atrIterator.value().type() == QVariant::List) {
+			dbg << atrIterator.key() << ":\n";
+			QList<QVariant> values = atrIterator.value().toList();
+			foreach(QVariant value, values) {
+				dbg << "  " << value.toString() << "\n";
+			}
+		}
+		else {
+			dbg << atrIterator.key() << ":" << atrIterator.value().toString() << "\n";
+		}
 	}
 	return dbg.space();
 }

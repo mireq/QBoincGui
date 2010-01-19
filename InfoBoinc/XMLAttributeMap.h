@@ -35,16 +35,25 @@ public:
 	 * Typ položky v XML súbore.
 	 */
 	enum AttributeType {
-		StringAttribute,   /**< Textový atribút.            */
-		BoolAttribute,     /**< Hodnoty \e true / \e false. */
-		IntAttribute,      /**< Celé číslo.                 */
-		UIntAttribute,     /**< Celé nezáporné číslo.       */
-		DoubleAttribute,   /**< Desatinné číslo.            */
-		TimestampAttribute /**< Časová pečiatka.            */
+		StringAttribute,    /**< Textový atribút.            */
+		BoolAttribute,      /**< Hodnoty \e true / \e false. */
+		IntAttribute,       /**< Celé číslo.                 */
+		UIntAttribute,      /**< Celé nezáporné číslo.       */
+		DoubleAttribute,    /**< Desatinné číslo.            */
+		TimestampAttribute, /**< Časová pečiatka.            */
+		ListAttribute = 1024 /**< Nastavením tohto flagu sa všetky atribúty s 
+		týmto názvom vkladajú do zoznamu. S ostatnými typmi atribútov
+		je kombinovateľný operátorom or (|) */
 	};
 
 	XMLAttributeMap();
 	~XMLAttributeMap();
+
+	/**
+	 * Vráti \e true, ak nebol nastavený obsah pomocou
+	 * XMLAttributeMap::parseAttributes.
+	 */
+	bool isNull() const;
 
 	/**
 	 * Vráti atribút s názvom \a name, alebo \e null, ak tento atribút
@@ -64,7 +73,7 @@ public:
    <desatinny_atribut>123.456</desatinny_atribut>
  </dokument> \endverbatim
 	 */
-	void parseAttributes(const QDomElement &dom, const QMap<QString,AttributeType> &attributes);
+	void parseAttributes(const QDomElement &dom, const QMap<QString,int> &attributes);
 
 	/* ====================  OPERATORS     ==================== */
 	/**
@@ -84,6 +93,7 @@ public:
 
 private:
 	QMap<QString, QVariant> m_attributes;
+	bool m_isNull;
 }; /* -----  end of class XMLAttributeMap  ----- */
 
 bool operator==(const XMLAttributeMap &lhs, const XMLAttributeMap &rhs);
