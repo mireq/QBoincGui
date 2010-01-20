@@ -27,6 +27,7 @@ public:
 	static PresentationSingleton &getInstance();
 
 	QString byteCountToString(double bytes);
+	QString timeIntervalToString(uint seconds);
 
 private:
 	PresentationSingleton();

@@ -82,3 +82,17 @@ QString PresentationSingleton::byteCountToString(double bytes)
 	return QLocale::system().toString(calculatedBytes, 'f', precision) + " " + sizeUnit;
 }
 
+
+QString PresentationSingleton::timeIntervalToString(uint seconds)
+{
+	static uint dayLength = 86400;
+	QTime time(0, 0, 0);
+	time = time.addSecs(seconds % uint(dayLength));
+	uint days = seconds / dayLength;
+	QString daysString;
+	if (days != 0) {
+		daysString = QObject::tr("%n day(s) ", "", days);
+	}
+	return daysString + time.toString(Qt::SystemLocaleLongDate);
+}
+
