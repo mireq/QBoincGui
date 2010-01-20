@@ -37,16 +37,19 @@ SessionInfoWidget::SessionInfoWidget(InfoBoinc::Session *session, QWidget *paren
 	ui->localClientLabel->setText(isLocalLabelText);
 	ui->directoryLabel->setText(directoryLabelText);
 
-	updateHostInfo(m_sessionPtr->hostInfo());
-	updateClientInfo(m_sessionPtr->clientInfo());
-	updateSessionState(m_sessionPtr->state());
+	updateHostInfo(session->hostInfo());
+	updateClientInfo(session->clientInfo());
+	updateSessionState(session->state());
 	connect(session, SIGNAL(hostInfoChanged(const InfoBoinc::HostInfo &, InfoBoinc::Session::IdType)), SLOT(updateHostInfo(const InfoBoinc::HostInfo &)));
 	connect(session, SIGNAL(stateChanged(InfoBoinc::Session::State, InfoBoinc::Session::IdType)), SLOT(updateSessionState(InfoBoinc::Session::State)));
 	connect(session, SIGNAL(clientInfoChanged(const InfoBoinc::ClientInfo &, InfoBoinc::Session::IdType)), SLOT(updateClientInfo(const InfoBoinc::ClientInfo &)));
 
 	// Ak nie je host info cachované vyžiadame si ho
-	if (m_sessionPtr->hostInfo().isNull()) {
+	if (session->hostInfo().isNull()) {
 		session->requestHostInfo();
+	}
+	if (session->clientInfo().isNull()) {
+		session->requestClientInfo();
 	}
 }
 

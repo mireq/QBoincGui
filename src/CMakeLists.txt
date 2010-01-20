@@ -9,6 +9,7 @@ set(QBoincGui_SRCS
 	ElidedTextLabel.cpp
 	Engine.cpp
 	GuiIcon.cpp
+	PresentationSingleton.cpp
 	ui_Master.cpp
 	ui_Advanced/AddClientWizard.cpp
 	ui_Advanced/BoincTree.cpp
@@ -17,10 +18,12 @@ set(QBoincGui_SRCS
 	ui_Advanced/MainWindow.cpp
 	ui_Advanced/ui_Advanced.cpp
 	ui_Advanced/InfoWidgets/SessionInfoWidget.cpp
+	ui_Advanced/InfoWidgets/SystemInfoWidget.cpp
 )
 
 set(QBoincGui_HDRS
 	GuiIcon.h
+	PresentationSingleton.h
 )
 
 set(QBoincGui_MOC_HDRS
@@ -35,11 +38,13 @@ set(QBoincGui_MOC_HDRS
 	ui_Advanced/MainWindow.h
 	ui_Advanced/ui_Advanced.h
 	ui_Advanced/InfoWidgets/SessionInfoWidget.h
+	ui_Advanced/InfoWidgets/SystemInfoWidget.h
 )
 
 set(QBoincGui_UIS
 	ui_Advanced/MainWindow.ui
 	ui_Advanced/InfoWidgets/SessionInfoWidget.ui
+	ui_Advanced/InfoWidgets/SystemInfoWidget.ui
 )
 
 set(QBoincGui_QRC

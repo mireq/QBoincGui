@@ -19,7 +19,6 @@
 
 #include "ui_Advanced/InfoWidget.h"
 #include "Session.h"
-#include <QtGui/QWidget>
 
 namespace Ui {
 	class SessionInfoWidget;
