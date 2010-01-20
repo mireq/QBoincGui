@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>701</width>
-    <height>435</height>
+    <width>640</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -70,7 +70,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>701</width>
+     <width>640</width>
      <height>15</height>
     </rect>
    </property>
@@ -119,15 +119,15 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>ElidedTextLabel</class>
+   <extends>QLabel</extends>
+   <header>ElidedTextLabel.h</header>
+  </customwidget>
+  <customwidget>
    <class>ui_AdvancedNS::BoincTree</class>
    <extends>QWidget</extends>
    <header>ui_Advanced/BoincTree.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>ElidedTextLabel</class>
-   <extends>QLabel</extends>
-   <header>ElidedTextLabel.h</header>
   </customwidget>
  </customwidgets>
  <resources>

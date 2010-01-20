@@ -40,7 +40,7 @@ public:
 
 	virtual void registerSession(InfoBoinc::Session::IdType id);
 	virtual void unregisterSession(InfoBoinc::Session::IdType id);
-	virtual InfoWidget *createInfoWidget(QTreeWidgetItem *item);
+	virtual QList<InfoWidget *> createInfoWidgets(QTreeWidgetItem *item);
 
 private slots:
 	void updateSessionState(InfoBoinc::Session::State state, InfoBoinc::Session::IdType sessionId);

@@ -37,18 +37,6 @@ void CoreBoincPlugin::registerSession(InfoBoinc::Session::IdType id)
 	Session *session = Engine::getInstance().session(id);
 	updateSessionState(session->state(), id);
 	connect(session, SIGNAL(stateChanged(InfoBoinc::Session::State, InfoBoinc::Session::IdType)), SLOT(updateSessionState(InfoBoinc::Session::State, InfoBoinc::Session::IdType)));
-	/*if (session->state() == InfoBoinc::Session::ConnectedState) {
-		QTreeWidgetItem *hostItem = new QTreeWidgetItem(HostType);
-		hostItem->setText(0, tr("Host info"));
-		hostItem->setIcon(0, GuiIcon("computer", "tree"));
-	
-		QList<QTreeWidgetItem *> items;
-		items.append(hostItem);
-	
-		boincTree()->addTreeItems(id, items);
-	
-		m_treeItems[id] = items;
-	}*/
 }
 
 
@@ -57,8 +45,9 @@ void CoreBoincPlugin::unregisterSession(InfoBoinc::Session::IdType /*id*/)
 }
 
 
-InfoWidget *CoreBoincPlugin::createInfoWidget(QTreeWidgetItem *item)
+QList<InfoWidget *> CoreBoincPlugin::createInfoWidgets(QTreeWidgetItem *item)
 {
+	QList<InfoWidget *> widgets;
 	InfoBoinc::Session::IdType sessionId = 0;
 	QTreeWidgetItem *sessionItem = item;
 	while (sessionItem->parent() != 0) {
@@ -70,9 +59,9 @@ InfoWidget *CoreBoincPlugin::createInfoWidget(QTreeWidgetItem *item)
 	switch (item->type()) {
 		case HostType: break;
 		default:
-			return new SessionInfoWidget(session);
+			widgets.append(new SessionInfoWidget(session));
 	}
-	return 0;
+	return widgets;
 }
 
 

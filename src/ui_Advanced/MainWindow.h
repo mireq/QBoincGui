@@ -17,6 +17,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QtCore/QList>
 #include <QtGui/QMainWindow>
 #include "Session.h"
 
@@ -44,15 +45,17 @@ public:
 private slots:
 	void on_actionAddClient_triggered();
 	void on_boincTree_currentItemChanged(QTreeWidgetItem *current);
+	void updateTitleInfo(int newTabIdx);
 
 private:
 	Ui::MainWindow *ui;
 
-	void setInfoWidget(InfoWidget *widget);
+	void setInfoWidgets(QList<InfoWidget *> widgets);
 
 	/* ====================  DATA MEMBERS  ==================== */
 	CoreBoincPlugin *m_coreBoincPlugin;
-	InfoWidget *m_currentInfoWidget;
+	QList<InfoWidget *> m_infoWidgets;
+	QTabWidget *m_tabWidget;
 }; /* -----  end of class MainWindow  ----- */
 
 } /* end of namespace ui_AdvancedNS */

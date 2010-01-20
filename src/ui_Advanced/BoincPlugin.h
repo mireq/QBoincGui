@@ -17,6 +17,7 @@
 #ifndef BOINCPLUGIN_H
 #define BOINCPLUGIN_H
 
+#include <QtCore/QList>
 #include <QtCore/QObject>
 #include "BoincTree.h"
 #include "Session.h"
@@ -36,7 +37,7 @@ public:
 	
 	virtual void registerSession(Session::IdType id) = 0;
 	virtual void unregisterSession(Session::IdType id) = 0;
-	virtual InfoWidget *createInfoWidget(QTreeWidgetItem *item) = 0;
+	virtual QList<InfoWidget *> createInfoWidgets(QTreeWidgetItem *item) = 0;
 
 protected:
 	BoincTree *boincTree() const { return m_boincTree; };
