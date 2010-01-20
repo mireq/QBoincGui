@@ -41,7 +41,7 @@ public:
 	int coreClientMinorVersion() const;
 	int coreClientRelease() const;
 	QString coreClientVersion() const;
-	QStringList platform() const;
+	QStringList platforms() const;
 
 	/* ====================  OPERATORS     ==================== */
 	friend bool operator==(const ClientInfo &lhs, const ClientInfo &rhs);

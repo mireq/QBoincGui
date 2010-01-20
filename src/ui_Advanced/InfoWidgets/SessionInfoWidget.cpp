@@ -64,6 +64,7 @@ void SessionInfoWidget::updateHostInfo(const InfoBoinc::HostInfo &hostInfo)
 	}
 	else {
 		ui->domainNameLabel->setText(hostInfo.domainName());
+		ui->ipAddressLabel->setText(hostInfo.ipAddr());
 		ui->osNameLabel->setText(hostInfo.osName());
 		ui->osVersionLabel->setText(hostInfo.osVersion());
 		ui->hostInfoGroup->show();
@@ -76,10 +77,12 @@ void SessionInfoWidget::updateClientInfo(const InfoBoinc::ClientInfo &clientInfo
 	if (clientInfo.isNull()) {
 		ui->platformLabel->setText("");
 		ui->clientVersionLabel->setText("");
+		ui->platformsLabel->setText("");
 	}
 	else {
 		ui->platformLabel->setText(clientInfo.platformName());
 		ui->clientVersionLabel->setText(clientInfo.coreClientVersion());
+		ui->platformsLabel->setText(clientInfo.platforms().join("\n"));
 	}
 }
 

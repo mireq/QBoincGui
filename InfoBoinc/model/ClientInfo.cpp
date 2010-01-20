@@ -14,6 +14,7 @@
  * =====================================================================
  */
 
+#include <QtCore/QStringList>
 #include "ClientInfo.h"
 
 namespace InfoBoinc {
@@ -70,7 +71,7 @@ QString ClientInfo::coreClientVersion() const
 	return QString("%1.%2.%3").arg(coreClientMajorVersion()).arg(coreClientMinorVersion()).arg(coreClientRelease());
 }
 
-QStringList ClientInfo::platform() const
+QStringList ClientInfo::platforms() const
 {
 	return m_attributes.attribute("platform").toStringList();
 }
