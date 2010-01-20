@@ -32,7 +32,6 @@ BoincTree::BoincTree(QWidget *parent):
 
 	m_tree->setHeaderHidden(true);
 	m_tree->setSortingEnabled(true);
-	m_tree->setAlternatingRowColors(true);
 	m_tree->setIconSize(QSize(32, 32));
 
 	connect(m_tree, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), SLOT(changeTreeSelection(QTreeWidgetItem *)));

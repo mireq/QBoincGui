@@ -116,6 +116,7 @@ void ClientDataWizardPage::initializePage()
 	if (field("isLocal").toBool() && (!m_directoryVisible)) {
 		m_layout->insertRow(0, m_directoryLabel, m_directoryLayout);
 		m_directoryEdit->setHidden(false);
+		m_directorySelectButton->setHidden(false);
 		m_directoryVisible = true;
 	}
 	else if (field("isRemote").toBool() && m_directoryVisible) {
@@ -124,6 +125,7 @@ void ClientDataWizardPage::initializePage()
 		m_directoryLabel->setParent(0);
 		m_directoryLayout->setParent(0);
 		m_directoryEdit->setHidden(true);
+		m_directorySelectButton->setHidden(true);
 		m_directoryVisible = false;
 	}
 }

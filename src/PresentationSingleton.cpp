@@ -15,6 +15,7 @@
  */
 
 #include <QtCore/QLocale>
+#include <QtCore/QObject>
 #include <QtCore/QString>
 #include "PresentationSingleton.h"
 
