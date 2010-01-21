@@ -1,5 +1,10 @@
 <RCC>
   <qresource prefix="/">
+    <file>icons/64x64/sections/project.png</file>
+    <file>icons/16x16/actions/nowork.png</file>
+    <file>icons/16x16/actions/suspend.png</file>
+    <file>icons/16x16/actions/update.png</file>
+    <file>icons/32x32/tree/project.png</file>
     <file>icons/64x64/sections/filetransfers.png</file>
     <file>icons/16x16/status/downloading.png</file>
     <file>icons/16x16/status/uploading.png</file>

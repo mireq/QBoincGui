@@ -97,3 +97,9 @@ QString PresentationSingleton::timeIntervalToString(uint seconds)
 	return daysString + time.toString(Qt::SystemLocaleLongDate);
 }
 
+
+QString PresentationSingleton::doubleToString(double i, char f, int prec)
+{
+	return QLocale::system().toString(i, f, prec);
+}
+

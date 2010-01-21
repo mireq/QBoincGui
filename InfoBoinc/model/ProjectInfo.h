@@ -37,7 +37,7 @@ public:
 
 	/* ====================  ACCESSORS     ==================== */
 	QString primaryKey() const;
-	QString masterUrl() const;
+	QString masterURL() const;
 	QString projectName() const;
 	QString userName() const;
 	QString teamName() const;

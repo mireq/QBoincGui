@@ -18,6 +18,7 @@
 #include <QtGui/QVBoxLayout>
 #include "Engine.h"
 #include "GuiIcon.h"
+#include "BoincTreeItems.h"
 #include "BoincTree.h"
 
 namespace ui_AdvancedNS {
@@ -31,6 +32,7 @@ BoincTree::BoincTree(QWidget *parent):
 	layout->addWidget(m_tree);
 
 	m_tree->setHeaderHidden(true);
+	m_tree->sortItems(0, Qt::AscendingOrder);
 	m_tree->setSortingEnabled(true);
 	m_tree->setIconSize(QSize(32, 32));
 
@@ -46,10 +48,10 @@ BoincTree::~BoincTree()
 void BoincTree::addSession(InfoBoinc::Session::IdType id)
 {
 	InfoBoinc::Session *session = Engine::getInstance().session(id);
-	QTreeWidgetItem *item = new QTreeWidgetItem;
-	item->setData(0, IdRole, id);
-	item->setData(0, UserItemRole, QString("%1:%2").arg(session->host()).arg(session->port()));
-	item->setData(0, Qt::DisplayRole, item->data(0, UserItemRole));
+	QTreeWidgetItem *item = new BoincTreeItem(0);
+	item->setData(0, BoincTreeItem::IdRole, id);
+	item->setData(0, BoincTreeItem::UserItemRole, QString("%1:%2").arg(session->host()).arg(session->port()));
+	item->setData(0, Qt::DisplayRole, item->data(0, BoincTreeItem::UserItemRole));
 	m_tree->addTopLevelItem(item);
 	m_tree->setItemExpanded(item, true);
 	m_sessionItems[id] = item;
@@ -78,7 +80,7 @@ void BoincTree::removeTreeItems(InfoBoinc::Session::IdType id, QList<QTreeWidget
 	QTreeWidgetItem *sessionItem = m_sessionItems[id];
 	m_tree->setUpdatesEnabled(false);
 	foreach (QTreeWidgetItem *item, items) {
-		sessionItem->removeChild(item);
+		sessionItem->takeChild(sessionItem->indexOfChild(item));
 	}
 	m_tree->setUpdatesEnabled(true);
 }
@@ -107,7 +109,7 @@ void BoincTree::changeSessionState(InfoBoinc::Session::State state, InfoBoinc::S
 			break;
 	}
 
-	item->setData(0, Qt::DisplayRole, item->data(0, UserItemRole).toString() + " (" + stateString + ")");
+	item->setData(0, Qt::DisplayRole, item->data(0, BoincTreeItem::UserItemRole).toString() + " (" + stateString + ")");
 }
 
 

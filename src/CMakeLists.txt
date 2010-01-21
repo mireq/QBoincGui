@@ -13,11 +13,13 @@ set(QBoincGui_SRCS
 	ui_Master.cpp
 	ui_Advanced/AddClientWizard.cpp
 	ui_Advanced/BoincTree.cpp
+	ui_Advanced/BoincTreeItems.cpp
 	ui_Advanced/CoreBoincPlugin.cpp
 	ui_Advanced/InfoWidget.cpp
 	ui_Advanced/MainWindow.cpp
 	ui_Advanced/ProgressItemDelegate.cpp
 	ui_Advanced/ui_Advanced.cpp
+	ui_Advanced/InfoWidgets/ProjectInfoWidget.cpp
 	ui_Advanced/InfoWidgets/SessionInfoWidget.cpp
 	ui_Advanced/InfoWidgets/SystemInfoWidget.cpp
 	ui_Advanced/InfoWidgets/TransfersInfoWidget.cpp
@@ -26,6 +28,7 @@ set(QBoincGui_SRCS
 set(QBoincGui_HDRS
 	GuiIcon.h
 	PresentationSingleton.h
+	ui_Advanced/BoincTreeItems.h
 )
 
 set(QBoincGui_MOC_HDRS
@@ -40,6 +43,7 @@ set(QBoincGui_MOC_HDRS
 	ui_Advanced/MainWindow.h
 	ui_Advanced/ProgressItemDelegate.h
 	ui_Advanced/ui_Advanced.h
+	ui_Advanced/InfoWidgets/ProjectInfoWidget.h
 	ui_Advanced/InfoWidgets/SessionInfoWidget.h
 	ui_Advanced/InfoWidgets/SystemInfoWidget.h
 	ui_Advanced/InfoWidgets/TransfersInfoWidget.h
@@ -47,6 +51,7 @@ set(QBoincGui_MOC_HDRS
 
 set(QBoincGui_UIS
 	ui_Advanced/MainWindow.ui
+	ui_Advanced/InfoWidgets/ProjectInfoWidget.ui
 	ui_Advanced/InfoWidgets/SessionInfoWidget.ui
 	ui_Advanced/InfoWidgets/SystemInfoWidget.ui
 	ui_Advanced/InfoWidgets/TransfersInfoWidget.ui

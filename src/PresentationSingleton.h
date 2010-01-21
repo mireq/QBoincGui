@@ -28,6 +28,7 @@ public:
 
 	QString byteCountToString(double bytes);
 	QString timeIntervalToString(uint seconds);
+	QString doubleToString(double i, char f = 'f', int prec = 2);
 
 private:
 	PresentationSingleton();

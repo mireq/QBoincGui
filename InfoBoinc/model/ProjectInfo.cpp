@@ -49,7 +49,7 @@ QString ProjectInfo::primaryKey() const
 	return m_attributes.attribute("master_url").toString();
 }
 
-QString ProjectInfo::masterUrl() const
+QString ProjectInfo::masterURL() const
 {
 	return m_attributes.attribute("master_url").toString();
 }
@@ -118,7 +118,7 @@ bool operator!=(const ProjectInfo &lhs, const ProjectInfo &rhs)
 QDebug operator<<(QDebug dbg, const ProjectInfo &info)
 {
 	dbg.nospace();
-	dbg << "Master URL: " << info.masterUrl() << "\n";
+	dbg << "Master URL: " << info.masterURL() << "\n";
 	dbg << "Project name: " << info.projectName() << "\n";
 	dbg << "User name: " << info.userName() << "\n";
 	if (!info.teamName().isNull()) {

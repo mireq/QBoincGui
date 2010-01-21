@@ -29,12 +29,6 @@ class BoincTree: public QWidget
 {
 Q_OBJECT
 public:
-	enum ItemRole {
-		PluginRole = Qt::UserRole,
-		IdRole,
-		UserItemRole
-	};
-
 	BoincTree(QWidget *parent = 0);
 	~BoincTree();
 	void addSession(InfoBoinc::Session::IdType id);

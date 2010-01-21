@@ -110,6 +110,8 @@ public:
 	 */
 	bool isLocal() const;
 
+	QList<QString> projects() const;
+
 	const ProjectInfo &project(const QString &projectId) const;
 
 	const HostInfo &hostInfo() const;
@@ -171,9 +173,9 @@ signals:
 	 */
 	void stateChanged(InfoBoinc::Session::State state, InfoBoinc::Session::IdType id);
 
-	void projectsAdded(const QList<QString> &projectId, InfoBoinc::Session::IdType id);
-	void projectsRemoved(const QList<QString> &projectId, InfoBoinc::Session::IdType id);
-	void projectsChanged(const QList<QString> &projectId, InfoBoinc::Session::IdType id);
+	void projectsAdded(const QList<QString> &projects, InfoBoinc::Session::IdType id);
+	void projectsRemoved(const QList<QString> &projects, InfoBoinc::Session::IdType id);
+	void projectsChanged(const QList<QString> &projects, InfoBoinc::Session::IdType id);
 
 	void hostInfoChanged(const InfoBoinc::HostInfo &hostInfo, InfoBoinc::Session::IdType id);
 	void clientInfoChanged(const InfoBoinc::ClientInfo &clientInfo, InfoBoinc::Session::IdType id);

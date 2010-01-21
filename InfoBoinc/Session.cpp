@@ -86,9 +86,15 @@ bool Session::isLocal() const
 }
 
 
-const ProjectInfo &Session::project(const QString &projectId) const
+QList<QString> Session::projects() const
 {
-	QMap<QString, ProjectInfo>::const_iterator info = m_projects.find(projectId);
+	return m_projects.keys();
+}
+
+
+const ProjectInfo &Session::project(const QString &masterURL) const
+{
+	QMap<QString, ProjectInfo>::const_iterator info = m_projects.find(masterURL);
 	return info.value();
 }
 
@@ -261,45 +267,43 @@ void Session::processProjectNodes(const QList<QDomElement> &projects)
 {
 	QSet<QString> projectsSet = QSet<QString>::fromList(m_projects.keys());
 	QList<QString> added;
-	QList<QString> removed;
 	QList<QString> changed;
 
 	// Zistenie zmien v projektoch a ich aktualizácia
 	foreach(const QDomElement &projectElement, projects) {
 		const ProjectInfo project(projectElement);
-		const QString projectId = project.primaryKey();
+		const QString masterURL = project.primaryKey();
 
 		QSet<QString>::iterator projectIterator = projectsSet.find(project.primaryKey());
 
 		// Projekt ešte nie je v zozname projektov
 		if (projectIterator == projectsSet.end()) {
-			m_projects.insert(projectId, project);
-			createProjectData(projectId);
-			added.append(projectId);
+			m_projects.insert(masterURL, project);
+			createProjectData(masterURL);
+			added.append(masterURL);
 		}
 		else {
-			if (project != this->project(projectId)) {
-				m_projects.insert(projectId, project);
-				changed.append(projectId);
+			if (project != this->project(masterURL)) {
+				m_projects.insert(masterURL, project);
+				changed.append(masterURL);
 			}
 			projectsSet.erase(projectIterator);
 		}
 	}
 
-	foreach(const QString &projectId, projectsSet) {
-		m_projects.remove(projectId);
-		removeProjectData(projectId);
-		removed.append(projectId);
-	}
-
 	if (!added.isEmpty()) {
 		emit projectsAdded(added, m_id);
 	}
-	if (!removed.isEmpty()) {
-		emit projectsRemoved(removed, m_id);
+	if (!projectsSet.isEmpty()) {
+		emit projectsRemoved(projectsSet.toList(), m_id);
 	}
 	if (!changed.isEmpty()) {
 		emit projectsChanged(changed, m_id);
+	}
+
+	foreach(const QString &masterURL, projectsSet) {
+		m_projects.remove(masterURL);
+		removeProjectData(masterURL);
 	}
 }
 
@@ -405,6 +409,17 @@ void Session::processState(const QByteArray &data)
 	}
 
 	processClientInfo(reply.toElement());
+	QList<QDomElement> projectNodes;
+	for (int i = 0; i < reply.childNodes().count(); ++i) {
+		QDomNode node = reply.childNodes().at(i);
+		if (!node.isElement()) {
+			continue;
+		}
+		if (node.nodeName() == "project") {
+			projectNodes.append(node.toElement());
+		}
+	}
+	processProjectNodes(projectNodes);
 }
 
 
