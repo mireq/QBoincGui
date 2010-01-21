@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="/">
+    <file>icons/64x64/sections/filetransfers.png</file>
+    <file>icons/16x16/status/downloading.png</file>
+    <file>icons/16x16/status/uploading.png</file>
+    <file>icons/32x32/tree/filetransfers.png</file>
     <file>icons/64x64/sections/session.png</file>
     <file>icons/64x64/sections/computer.png</file>
     <file>icons/16x16/actions/documentinfo.png</file>

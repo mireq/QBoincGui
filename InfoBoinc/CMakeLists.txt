@@ -9,6 +9,7 @@ set(InfoBoinc_SRCS
 	Socket.cpp
 	XMLAttributeMap.cpp
 	model/ClientInfo.cpp
+	model/FileTransferInfo.cpp
 	model/HostInfo.cpp
 	model/ProjectInfo.cpp
 )
@@ -16,6 +17,7 @@ set(InfoBoinc_SRCS
 set(InfoBoinc_HDRS
 	XMLAttributeMap.h
 	model/ClientInfo.h
+	model/FileTransferInfo.h
 	model/HostInfo.h
 	model/ProjectInfo.h
 )

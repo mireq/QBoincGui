@@ -17,6 +17,7 @@
 #include <QtCore/QLocale>
 #include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtCore/QTime>
 #include "PresentationSingleton.h"
 
 PresentationSingleton::PresentationSingleton()

@@ -45,7 +45,7 @@ signals:
 private slots:
 	void onSessionStateChanged(InfoBoinc::Session::State state, InfoBoinc::Session::IdType id);
 
-private:
+protected:
 	virtual void timerEvent(QTimerEvent *event);
 
 // Zákaz konštruktorov (singleton)

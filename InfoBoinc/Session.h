@@ -21,6 +21,7 @@
 #include <QtCore/QObject>
 #include <QtXml/QDomNode>
 #include "model/ClientInfo.h"
+#include "model/FileTransferInfo.h"
 #include "model/HostInfo.h"
 #include "model/ProjectInfo.h"
 #include "Socket.h"
@@ -115,6 +116,8 @@ public:
 
 	const ClientInfo &clientInfo() const;
 
+	QList<FileTransferInfo> transfers() const;
+
 	/**
 	 * Nastavenie pracovného adresára na \a directory;
 	 */
@@ -153,6 +156,8 @@ public slots:
 	void requestState();
 	void requestClientInfo();
 
+	void requestFileTransfers();
+
 signals:
 	/**
 	 * Signál sa emituje v dôsledku chyby spôsobenej pri komunikácii s klientom,
@@ -172,6 +177,10 @@ signals:
 
 	void hostInfoChanged(const InfoBoinc::HostInfo &hostInfo, InfoBoinc::Session::IdType id);
 	void clientInfoChanged(const InfoBoinc::ClientInfo &clientInfo, InfoBoinc::Session::IdType id);
+
+	void transferAdded(const InfoBoinc::FileTransferInfo &info, InfoBoinc::Session::IdType id);
+	void transferRemoved(const InfoBoinc::FileTransferInfo &info, InfoBoinc::Session::IdType id);
+	void transferChanged(const InfoBoinc::FileTransferInfo &info, InfoBoinc::Session::IdType id);
 
 private slots:
 	void processData(const QByteArray &data);
@@ -201,6 +210,7 @@ private:
 	void processProjectStatus(const QByteArray &data);
 	void processHostInfo(const QByteArray &data);
 	void processState(const QByteArray &data);
+	void processFileTransfers(const QByteArray &data);
 
 	/* ====================  STATIC        ==================== */
 	static quint32 m_nextId;
@@ -220,6 +230,7 @@ private:
 	QMap<QString, ProjectInfo> m_projects;
 	HostInfo m_hostInfo;
 	ClientInfo m_clientInfo;
+	QMap<QPair<QString, QString>, FileTransferInfo> m_transfers;
 }; /* -----  end of class Session  ----- */
 
 #ifndef QT_NO_DEBUG_STREAM

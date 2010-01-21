@@ -65,6 +65,7 @@ void XMLAttributeMap::parseAttributes(const QDomElement &dom, const QMap<QString
 			QVariant value = node.toElement().text();
 			switch (type) {
 				case BoolAttribute:      value = QVariant(value.toBool());   break;
+				case ExistsAttribute:    value = QVariant(true);             break;
 				case IntAttribute:       value = QVariant(value.toInt());    break;
 				case UIntAttribute:      value = QVariant(value.toUInt());   break;
 				case DoubleAttribute:    value = QVariant(value.toDouble()); break;

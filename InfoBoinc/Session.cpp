@@ -105,6 +105,12 @@ const ClientInfo &Session::clientInfo() const
 }
 
 
+QList<FileTransferInfo> Session::transfers() const
+{
+	return m_transfers.values();
+}
+
+
 void Session::setState(State state)
 {
 	if (state != m_state) {
@@ -168,6 +174,12 @@ void Session::requestState()
 void Session::requestClientInfo()
 {
 	requestState();
+}
+
+
+void Session::requestFileTransfers()
+{
+	sendCommand("<boinc_gui_rpc_request><get_file_transfers /></boinc_gui_rpc_request>", &Session::processFileTransfers);
 }
 
 
@@ -393,6 +405,51 @@ void Session::processState(const QByteArray &data)
 	}
 
 	processClientInfo(reply.toElement());
+}
+
+
+void Session::processFileTransfers(const QByteArray &data)
+{
+	QDomNode reply = getReply(data);
+	if (reply.nodeName() != "file_transfers") {
+		triggerXmlError(reply);
+		return;
+	}
+
+	// Zoznam kľúčov prenosov súborov, v cykle sa odstraňujú položky a ostanú len
+	// tie, ktoré od poslednej aktualizácie zmizli.
+	QSet<QPair<QString, QString> > transfersSet = QSet<QPair<QString, QString> >::fromList(m_transfers.keys());
+
+	for (int i = 0; i < reply.childNodes().count(); ++i) {
+		QDomNode node = reply.childNodes().at(i);
+		if (!node.isElement()) {
+			continue;
+		}
+
+		FileTransferInfo ftInfo(node.toElement());
+		// Už existuje, aktualizujeme
+		if (transfersSet.contains(ftInfo.primaryKey())) {
+			if (ftInfo != m_transfers.find(ftInfo.primaryKey()).value()) {
+				m_transfers.insert(ftInfo.primaryKey(), ftInfo);
+				emit transferChanged(ftInfo, m_id);
+			}
+			transfersSet.remove(ftInfo.primaryKey());
+		}
+		// Neexistuje, pridávame
+		else {
+			m_transfers.insert(ftInfo.primaryKey(), ftInfo);
+			emit transferAdded(ftInfo, m_id);
+		}
+	}
+
+	// Odstránime zostávajúce prenosy súborov
+	QPair<QString, QString> trans;
+	foreach(trans, transfersSet) {
+		QMap<QPair<QString, QString>, FileTransferInfo >::iterator fileTransfer = m_transfers.find(trans);
+		FileTransferInfo info = fileTransfer.value();
+		m_transfers.erase(fileTransfer);
+		emit transferRemoved(info, m_id);
+	}
 }
 
 

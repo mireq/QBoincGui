@@ -32,7 +32,8 @@ class CoreBoincPlugin: public BoincPlugin
 Q_OBJECT
 public:
 	enum ItemType {
-		HostType = QTreeWidgetItem::UserType
+		SystemType = QTreeWidgetItem::UserType,
+		FiletransfersType
 	};
 
 	CoreBoincPlugin(BoincTree *boincTree, QObject *parent = 0);

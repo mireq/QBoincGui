@@ -16,9 +16,11 @@ set(QBoincGui_SRCS
 	ui_Advanced/CoreBoincPlugin.cpp
 	ui_Advanced/InfoWidget.cpp
 	ui_Advanced/MainWindow.cpp
+	ui_Advanced/ProgressItemDelegate.cpp
 	ui_Advanced/ui_Advanced.cpp
 	ui_Advanced/InfoWidgets/SessionInfoWidget.cpp
 	ui_Advanced/InfoWidgets/SystemInfoWidget.cpp
+	ui_Advanced/InfoWidgets/TransfersInfoWidget.cpp
 )
 
 set(QBoincGui_HDRS
@@ -31,20 +33,23 @@ set(QBoincGui_MOC_HDRS
 	Engine.h
 	ui_Master.h
 	ui_Advanced/AddClientWizard.h
+	ui_Advanced/BoincPlugin.h
 	ui_Advanced/BoincTree.h
 	ui_Advanced/CoreBoincPlugin.h
 	ui_Advanced/InfoWidget.h
-	ui_Advanced/BoincPlugin.h
 	ui_Advanced/MainWindow.h
+	ui_Advanced/ProgressItemDelegate.h
 	ui_Advanced/ui_Advanced.h
 	ui_Advanced/InfoWidgets/SessionInfoWidget.h
 	ui_Advanced/InfoWidgets/SystemInfoWidget.h
+	ui_Advanced/InfoWidgets/TransfersInfoWidget.h
 )
 
 set(QBoincGui_UIS
 	ui_Advanced/MainWindow.ui
 	ui_Advanced/InfoWidgets/SessionInfoWidget.ui
 	ui_Advanced/InfoWidgets/SystemInfoWidget.ui
+	ui_Advanced/InfoWidgets/TransfersInfoWidget.ui
 )
 
 set(QBoincGui_QRC

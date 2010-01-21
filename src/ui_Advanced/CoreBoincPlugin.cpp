@@ -17,6 +17,8 @@
 #include "Engine.h"
 #include "GuiIcon.h"
 #include "InfoWidgets/SessionInfoWidget.h"
+#include "InfoWidgets/SystemInfoWidget.h"
+#include "InfoWidgets/TransfersInfoWidget.h"
 #include "CoreBoincPlugin.h"
 
 namespace ui_AdvancedNS {
@@ -57,7 +59,12 @@ QList<InfoWidget *> CoreBoincPlugin::createInfoWidgets(QTreeWidgetItem *item)
 
 	Session *session = Engine::getInstance().session(sessionId);
 	switch (item->type()) {
-		case HostType: break;
+		case SystemType:
+			widgets.append(new SystemInfoWidget(session));
+			break;
+		case FiletransfersType:
+			widgets.append(new TransfersInfoWidget(session));
+			break;
 		default:
 			widgets.append(new SessionInfoWidget(session));
 	}
@@ -68,12 +75,15 @@ QList<InfoWidget *> CoreBoincPlugin::createInfoWidgets(QTreeWidgetItem *item)
 void CoreBoincPlugin::updateSessionState(InfoBoinc::Session::State state, InfoBoinc::Session::IdType sessionId)
 {
 	if (state == InfoBoinc::Session::ConnectedState && !m_treeItems.contains(sessionId)) {
-		QTreeWidgetItem *hostItem = new QTreeWidgetItem(HostType);
-		hostItem->setText(0, tr("Host info"));
+		QTreeWidgetItem *hostItem = new QTreeWidgetItem(SystemType);
+		hostItem->setText(0, tr("System"));
 		hostItem->setIcon(0, GuiIcon("computer", "tree"));
+		QTreeWidgetItem *fileTransfersItem = new QTreeWidgetItem(FiletransfersType);
+		fileTransfersItem->setText(0, tr("File transfers"));
+		fileTransfersItem->setIcon(0, GuiIcon("filetransfers", "tree"));
 	
 		QList<QTreeWidgetItem *> items;
-		items.append(hostItem);
+		items << hostItem << fileTransfersItem;
 	
 		boincTree()->addTreeItems(sessionId, items);
 	

@@ -37,6 +37,7 @@ public:
 	enum AttributeType {
 		StringAttribute,    /**< Textový atribút.            */
 		BoolAttribute,      /**< Hodnoty \e true / \e false. */
+		ExistsAttribute,    /**< Platí \e true, ak existuje. */
 		IntAttribute,       /**< Celé číslo.                 */
 		UIntAttribute,      /**< Celé nezáporné číslo.       */
 		DoubleAttribute,    /**< Desatinné číslo.            */
