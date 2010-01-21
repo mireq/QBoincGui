@@ -63,7 +63,12 @@ void TransfersInfoWidget::timerEvent(QTimerEvent * /*event*/)
 void TransfersInfoWidget::addTransfer(const InfoBoinc::FileTransferInfo &info)
 {
 	QTreeWidgetItem *item = new QTreeWidgetItem;
-	item->setData(0, Qt::DecorationRole, GuiIcon("uploading", "status"));
+	if (info.generatedLocally()) {
+		item->setData(0, Qt::DecorationRole, GuiIcon("uploading", "status"));
+	}
+	else {
+		item->setData(0, Qt::DecorationRole, GuiIcon("downloading", "status"));
+	}
 	setItemProperties(info, item);
 	ui->transfersList->addTopLevelItem(item);
 	m_items.insert(info.primaryKey(), item);
@@ -128,6 +133,9 @@ void TransfersInfoWidget::updateStatus(QTreeWidgetItem *item)
 		uint now = QDateTime::currentDateTime().toTime_t();
 		if (nextReq > now) {
 			statusMessage = tr("Retry in") + " " + PresentationSingleton::getInstance().timeIntervalToString(nextReq - now);
+		}
+		else {
+			statusMessage = tr("Suspended");
 		}
 	}
 	else if (status == InfoBoinc::FileTransferInfo::ErrorDownloadStatus) {

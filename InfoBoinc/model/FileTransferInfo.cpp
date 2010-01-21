@@ -117,7 +117,7 @@ bool FileTransferInfo::isXferActive() const
 
 double FileTransferInfo::bytesXferred() const
 {
-	return m_attributes.attribute("bytex_xferred").toDouble();
+	return m_attributes.attribute("bytes_xferred").toDouble();
 }
 
 double FileTransferInfo::fileOffset() const
