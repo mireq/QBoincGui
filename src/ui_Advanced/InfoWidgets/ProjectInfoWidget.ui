@@ -252,7 +252,7 @@
        </property>
        <property name="icon">
         <iconset resource="../../resources.qrc">
-         <normaloff>:/icons/16x16/actions/nowork.png</normaloff>:/icons/16x16/actions/nowork.png</iconset>
+         <normaloff>:/icons/16x16/status/nowork.png</normaloff>:/icons/16x16/status/nowork.png</iconset>
        </property>
       </widget>
      </item>
@@ -266,7 +266,7 @@
        </property>
        <property name="icon">
         <iconset resource="../../resources.qrc">
-         <normaloff>:/icons/16x16/actions/suspend.png</normaloff>:/icons/16x16/actions/suspend.png</iconset>
+         <normaloff>:/icons/16x16/status/suspended.png</normaloff>:/icons/16x16/status/suspended.png</iconset>
        </property>
       </widget>
      </item>

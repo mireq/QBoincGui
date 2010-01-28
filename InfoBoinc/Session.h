@@ -24,6 +24,8 @@
 #include "model/FileTransferInfo.h"
 #include "model/HostInfo.h"
 #include "model/ProjectInfo.h"
+#include "model/ResultInfo.h"
+#include "model/WorkunitInfo.h"
 #include "Socket.h"
 
 namespace InfoBoinc {
@@ -120,6 +122,8 @@ public:
 
 	QList<FileTransferInfo> transfers() const;
 
+	ResultInfo result(const QString &masterURL, const QString &name) const;
+
 	/**
 	 * Nastavenie pracovného adresára na \a directory;
 	 */
@@ -177,6 +181,10 @@ signals:
 	void projectsRemoved(const QList<QString> &projects, InfoBoinc::Session::IdType id);
 	void projectsChanged(const QList<QString> &projects, InfoBoinc::Session::IdType id);
 
+	void resultsAdded(const QMap<QString, QList<QString> > &results, InfoBoinc::Session::IdType id);
+	void resultsRemoved(const QMap<QString, QList<QString> > &results, InfoBoinc::Session::IdType id);
+	void resultsChanged(const QMap<QString, QList<QString> > &results, InfoBoinc::Session::IdType id);
+
 	void hostInfoChanged(const InfoBoinc::HostInfo &hostInfo, InfoBoinc::Session::IdType id);
 	void clientInfoChanged(const InfoBoinc::ClientInfo &clientInfo, InfoBoinc::Session::IdType id);
 
@@ -201,8 +209,9 @@ private:
 	void sendCommand(const QByteArray &command, TProcessDataCallback callback);
 	void startAuthorisation();
 
-	void processProjectNodes(const QList<QDomElement> &projects);
+	void processProjects(const QList<ProjectInfo> &projects);
 	void processClientInfo(const QDomElement &element);
+	void processWorkunits(const QMap<QString, QList<QDomElement> > &workunitElements, const QMap<QString, QList<QDomElement> > &resultElements);
 	void createProjectData(const QString &projectId);
 	void removeProjectData(const QString &projectId);
 
@@ -233,6 +242,7 @@ private:
 	HostInfo m_hostInfo;
 	ClientInfo m_clientInfo;
 	QMap<QPair<QString, QString>, FileTransferInfo> m_transfers;
+	QMap<QString, QMap<QString, ResultInfo> > m_results;
 }; /* -----  end of class Session  ----- */
 
 #ifndef QT_NO_DEBUG_STREAM

@@ -1,9 +1,14 @@
 <RCC>
   <qresource prefix="/">
     <file>icons/64x64/sections/project.png</file>
-    <file>icons/16x16/actions/nowork.png</file>
-    <file>icons/16x16/actions/suspend.png</file>
+    <file>icons/32x32/tree/result.png</file>
     <file>icons/16x16/actions/update.png</file>
+    <file>icons/16x16/status/error.png</file>
+    <file>icons/16x16/status/nowork.png</file>
+    <file>icons/16x16/status/running.png</file>
+    <file>icons/16x16/status/uploaded.png</file>
+    <file>icons/16x16/status/suspended.png</file>
+    <file>icons/16x16/status/aborted.png</file>
     <file>icons/32x32/tree/project.png</file>
     <file>icons/64x64/sections/filetransfers.png</file>
     <file>icons/16x16/status/downloading.png</file>

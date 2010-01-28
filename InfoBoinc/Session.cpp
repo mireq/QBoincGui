@@ -117,6 +117,18 @@ QList<FileTransferInfo> Session::transfers() const
 }
 
 
+ResultInfo Session::result(const QString &masterURL, const QString &name) const
+{
+	if (m_results.contains(masterURL)) {
+		QMap<QString, ResultInfo>::const_iterator resultIter = m_results[masterURL].find(name);
+		if (resultIter != m_results[masterURL].end()) {
+			return resultIter.value();
+		}
+	}
+	return ResultInfo();
+}
+
+
 void Session::setState(State state)
 {
 	if (state != m_state) {
@@ -263,15 +275,14 @@ void Session::startAuthorisation()
 }
 
 
-void Session::processProjectNodes(const QList<QDomElement> &projects)
+void Session::processProjects(const QList<ProjectInfo> &projects)
 {
 	QSet<QString> projectsSet = QSet<QString>::fromList(m_projects.keys());
 	QList<QString> added;
 	QList<QString> changed;
 
 	// Zistenie zmien v projektoch a ich aktualizácia
-	foreach(const QDomElement &projectElement, projects) {
-		const ProjectInfo project(projectElement);
+	foreach(const ProjectInfo &project, projects) {
 		const QString masterURL = project.primaryKey();
 
 		QSet<QString>::iterator projectIterator = projectsSet.find(project.primaryKey());
@@ -314,6 +325,72 @@ void Session::processClientInfo(const QDomElement &element)
 	if (info != m_clientInfo) {
 		m_clientInfo = info;
 		emit clientInfoChanged(m_clientInfo, m_id);
+	}
+}
+
+
+void Session::processWorkunits(const QMap<QString, QList<QDomElement> > &workunitElements, const QMap<QString, QList<QDomElement> > &resultElements)
+{
+	QMap<QString, QList<QString> > added;
+	QMap<QString, QList<QString> > changed;
+
+	QMap<QString, QMap<QString, WorkunitInfo> > workunits;
+
+	for (QMap<QString, QList<QDomElement> >::const_iterator wuMapIter = workunitElements.begin(); wuMapIter != workunitElements.end(); ++wuMapIter) {
+		const QString masterURL = wuMapIter.key();
+		foreach(const QDomElement &wuElement, wuMapIter.value()) {
+			WorkunitInfo workunit(wuElement);
+			workunits[masterURL].insert(workunit.primaryKey(), workunit);
+		}
+	}
+
+	for (QMap<QString, QList<QDomElement> >::const_iterator resultMapIter = resultElements.begin(); resultMapIter != resultElements.end(); ++resultMapIter) {
+		const QString masterURL = resultMapIter.key();
+		foreach(const QDomElement &resultElement, resultMapIter.value()) {
+			ResultInfo result(resultElement);
+			QMap<QString, QMap<QString, WorkunitInfo> >::iterator wuListIterator = workunits.find(masterURL);
+			if (wuListIterator != workunits.end()) {
+				QMap<QString, WorkunitInfo>::iterator wuIterator  = wuListIterator.value().find(result.wuName());
+				if (wuIterator != wuListIterator.value().end()) {
+					result.bindWorkunit(wuIterator.value());
+					result.bindWorkunit(wuIterator.value());
+				}
+			}
+			if (!m_results[masterURL].contains(result.primaryKey())) {
+				added[masterURL].append(result.primaryKey());
+			}
+			else {
+				QMap<QString, ResultInfo>::iterator old = m_results[masterURL].find(result.primaryKey());
+				if (old.value() != result) {
+					changed[masterURL].append(result.primaryKey());
+				}
+			}
+			m_results[masterURL].insert(result.primaryKey(), result);
+		}
+	}
+/*
+	for (QMap<QString, QList<QDomElement> >::const_iterator wuMapIter = workunits.begin(); wuMapIter != workunits.end(); ++wuMapIter) {
+		const QString masterURL = wuMapIter.key();
+		foreach(const QDomElement &wuElement, wuMapIter.value()) {
+			WorkunitInfo workunit(wuElement);
+			if (!m_workunits[masterURL].contains(workunit.primaryKey())) {
+				added[masterURL].append(workunit.primaryKey());
+			}
+			else {
+				QMap<QString, WorkunitInfo>::iterator old = m_workunits[masterURL].find(workunit.primaryKey());
+				if (old.value() != workunit) {
+					changed[masterURL].append(workunit.primaryKey());
+				}
+			}
+			m_workunits[masterURL].insert(workunit.primaryKey(), workunit);
+		}
+	}
+*/
+	if (!added.empty()) {
+		emit resultsAdded(added, m_id);
+	}
+	if (!changed.empty()) {
+		emit resultsChanged(changed, m_id);
 	}
 }
 
@@ -373,14 +450,14 @@ void Session::processProjectStatus(const QByteArray &data)
 		return;
 	}
 
-	QList<QDomElement> nodes;
+	QList<ProjectInfo> projects;
 	for (int i = 0; i < reply.childNodes().count(); ++i) {
 		QDomNode projectNode = reply.childNodes().at(i);
 		if (projectNode.isElement()) {
-			nodes.append(projectNode.toElement());
+			projects.append(ProjectInfo(projectNode.toElement()));
 		}
 	}
-	processProjectNodes(nodes);
+	processProjects(projects);
 }
 
 
@@ -409,17 +486,26 @@ void Session::processState(const QByteArray &data)
 	}
 
 	processClientInfo(reply.toElement());
-	QList<QDomElement> projectNodes;
+	QList<ProjectInfo> projects;
+	QMap<QString, QList<QDomElement> > workunitNodes;
+	QMap<QString, QList<QDomElement> > resultNodes;
 	for (int i = 0; i < reply.childNodes().count(); ++i) {
 		QDomNode node = reply.childNodes().at(i);
 		if (!node.isElement()) {
 			continue;
 		}
 		if (node.nodeName() == "project") {
-			projectNodes.append(node.toElement());
+			projects.append(ProjectInfo(node.toElement()));
+		}
+		else if (node.nodeName() == "workunit") {
+			workunitNodes[projects.last().primaryKey()].append(node.toElement());
+		}
+		else if (node.nodeName() == "result") {
+			resultNodes[projects.last().primaryKey()].append(node.toElement());
 		}
 	}
-	processProjectNodes(projectNodes);
+	processProjects(projects);
+	processWorkunits(workunitNodes, resultNodes);
 }
 
 

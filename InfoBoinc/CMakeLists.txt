@@ -12,6 +12,8 @@ set(InfoBoinc_SRCS
 	model/FileTransferInfo.cpp
 	model/HostInfo.cpp
 	model/ProjectInfo.cpp
+	model/ResultInfo.cpp
+	model/WorkunitInfo.cpp
 )
 
 set(InfoBoinc_HDRS
@@ -20,6 +22,8 @@ set(InfoBoinc_HDRS
 	model/FileTransferInfo.h
 	model/HostInfo.h
 	model/ProjectInfo.h
+	model/ResultInfo.h
+	model/WorkunitInfo.h
 )
 
 set(InfoBoinc_MOC_HDRS

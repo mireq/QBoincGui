@@ -46,6 +46,7 @@ void Engine::initializeUi()
 {
 	m_uiMaster = new ui_Advanced;
 	connect(this, SIGNAL(sessionAdded(InfoBoinc::Session::IdType)), m_uiMaster, SLOT(addSession(InfoBoinc::Session::IdType)));
+	addSession("localhost", 31416, "4862019656db1e4a745ea84e5606d672");
 }
 
 
@@ -101,7 +102,7 @@ void Engine::timerEvent(QTimerEvent * /*event*/)
 {
 	foreach (Session *session, m_sessions) {
 		if (session->state() == Session::ConnectedState) {
-			session->requestProjectStatus();
+			session->requestState();
 		}
 	}
 }

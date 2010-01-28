@@ -49,6 +49,7 @@ private:
 		StatusInfo = Qt::UserRole,
 		ActiveInfo,
 		LocallyInfo,
+		FirstRequestInfo,
 		NextRequestInfo
 	};
 

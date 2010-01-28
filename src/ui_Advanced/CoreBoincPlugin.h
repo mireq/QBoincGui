@@ -34,7 +34,8 @@ public:
 	enum ItemType {
 		SystemType = QTreeWidgetItem::UserType,
 		FiletransfersType,
-		ProjectType
+		ProjectType,
+		ResultType
 	};
 
 	CoreBoincPlugin(BoincTree *boincTree, QObject *parent = 0);
@@ -48,6 +49,13 @@ private slots:
 	void updateSessionState(InfoBoinc::Session::State state, InfoBoinc::Session::IdType sessionId);
 	void addProjects(const QList<QString> &projectURLs, InfoBoinc::Session::IdType sessionId);
 	void removeProjects(const QList<QString> &projectURLs, InfoBoinc::Session::IdType sessionId);
+	void addResults(const QMap<QString, QList<QString> > &results, InfoBoinc::Session::IdType id);
+	void changeResults(const QMap<QString, QList<QString> > &results, InfoBoinc::Session::IdType id);
+
+private:
+	void updateResultItem(QTreeWidgetItem *resultItem, InfoBoinc::Session *session, const QString masterURL, const QString name);
+	QPixmap modifyResultPixmap(const QPixmap &pixmap, double fractionDone);
+	QPixmap composeResultPixmap(const QPixmap &pixmap, const QPixmap &overlay);
 
 private:
 	QMap<InfoBoinc::Session::IdType, QList<QTreeWidgetItem *> > m_treeItems;

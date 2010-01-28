@@ -109,15 +109,16 @@ void TransfersInfoWidget::setItemProperties(const InfoBoinc::FileTransferInfo &i
 	sizeString += " / " + PresentationSingleton::getInstance().byteCountToString(info.nBytes());
 	QString speedString = PresentationSingleton::getInstance().byteCountToString(info.xferSpeed()) + "/s";
 
-	item->setData(ProjectColumn,  Qt::DisplayRole, QVariant(info.projectName()));
-	item->setData(NameColumn,     Qt::DisplayRole, QVariant(info.name()));
-	item->setData(ProgressColumn, Qt::DisplayRole, QVariant(progress));
-	item->setData(SizeColumn,     Qt::DisplayRole, QVariant(sizeString));
-	item->setData(SpeedColumn,    Qt::DisplayRole, QVariant(speedString));
-	item->setData(StatusColumn,   StatusInfo,      info.status());
-	item->setData(StatusColumn,   ActiveInfo,      info.isXferActive());
-	item->setData(StatusColumn,   LocallyInfo,     info.generatedLocally());
-	item->setData(StatusColumn,   NextRequestInfo, info.nextRequestTime());
+	item->setData(ProjectColumn,  Qt::DisplayRole,  QVariant(info.projectName()));
+	item->setData(NameColumn,     Qt::DisplayRole,  QVariant(info.name()));
+	item->setData(ProgressColumn, Qt::DisplayRole,  QVariant(progress));
+	item->setData(SizeColumn,     Qt::DisplayRole,  QVariant(sizeString));
+	item->setData(SpeedColumn,    Qt::DisplayRole,  QVariant(speedString));
+	item->setData(StatusColumn,   StatusInfo,       info.status());
+	item->setData(StatusColumn,   ActiveInfo,       info.isXferActive());
+	item->setData(StatusColumn,   LocallyInfo,      info.generatedLocally());
+	item->setData(StatusColumn,   FirstRequestInfo, info.firstRequestTime());
+	item->setData(StatusColumn,   NextRequestInfo,  info.nextRequestTime());
 	updateStatus(item);
 }
 
@@ -131,7 +132,7 @@ void TransfersInfoWidget::updateStatus(QTreeWidgetItem *item)
 	if (item->data(StatusColumn, NextRequestInfo).toDateTime().toTime_t() != 0) {
 		uint nextReq = item->data(StatusColumn, NextRequestInfo).toDateTime().toTime_t();
 		uint now = QDateTime::currentDateTime().toTime_t();
-		if (nextReq > now) {
+		if (nextReq > now && item->data(StatusColumn, FirstRequestInfo).toDateTime().isValid()) {
 			statusMessage = tr("Retry in") + " " + PresentationSingleton::getInstance().timeIntervalToString(nextReq - now);
 		}
 		else {
